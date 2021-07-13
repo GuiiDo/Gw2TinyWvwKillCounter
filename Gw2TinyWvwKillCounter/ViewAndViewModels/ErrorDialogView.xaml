@@ -1,0 +1,38 @@
+﻿<Window x:Class="Gw2TinyWvwKillCounter.ViewAndViewModels.ErrorDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewAndViewModels="clr-namespace:Gw2TinyWvwKillCounter.ViewAndViewModels"
+        xmlns:icon="clr-namespace:Gw2TinyWvwKillCounter.Icon"
+        mc:Ignorable="d"
+        Topmost="True"
+        MouseDown="DragWindowWithLeftMouseButton"
+        WindowStyle="None" AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        Title="Error"
+        d:DataContext="{d:DesignInstance Type=viewAndViewModels:ErrorDialogViewModel, IsDesignTimeCreatable=false}">
+    <Window.Background>
+        <SolidColorBrush Color="DarkRed" />
+    </Window.Background>
+    <StackPanel Orientation="Vertical"
+                Margin="5">
+        <TextBlock Text="Error "
+                   FontWeight="Bold"
+                   FontSize="15"
+                   Foreground="White" />
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="LightGray" />
+        <Button Command="{Binding ConfirmCommand}"
+                Background="Transparent"
+                BorderThickness="0"
+                HorizontalAlignment="Left">
+            <Viewbox Width="17" Height="17">
+                <Canvas Width="24" Height="24">
+                    <Path Fill="LightGreen" Data="{x:Static icon:Icons.Tick}" />
+                </Canvas>
+            </Viewbox>
+        </Button>
+    </StackPanel>
+</Window>

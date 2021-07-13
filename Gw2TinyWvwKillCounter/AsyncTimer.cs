@@ -6,42 +6,41 @@ namespace Gw2TinyWvwKillCounter
 {
     public class AsyncTimer
     {
-        public async void Start(uint intervalInSeconds)
+        public AsyncTimer(int intervalInSeconds)
         {
-            StopTimerIfRunning();
-            _timerIsRunning = true;
-            _timerCancellationTokenSource = new CancellationTokenSource();
+            _intervalInSeconds = intervalInSeconds;
+        }
 
-            while (_timerIsRunning)
+        public async void Start()
+        {
+            // stop() call could be replaced by a if(_timerIsRunning)-guard, but then next interval after Start() ends "randomly"
+            // in less than _intervalInSeconds because the timer is already running.
+            Stop();
+            _isRunning               = true;
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            while (_isRunning)
             {
-                try
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(intervalInSeconds), _timerCancellationTokenSource.Token);
+                await Task.Delay(TimeSpan.FromSeconds(_intervalInSeconds), _cancellationTokenSource.Token);
+
+                if (_isRunning) // not sure if necessary: Stop() called between Task.Delay ended and continuation on message pump is called? 
                     IntervalEnded?.Invoke(this, EventArgs.Empty);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
             }
         }
 
         public void Stop()
         {
-            StopTimerIfRunning();
-        }
-
-        private void StopTimerIfRunning()
-        {
-            if (_timerIsRunning)
+            if (_isRunning)
             {
-                _timerCancellationTokenSource?.Cancel();
-                _timerIsRunning = false;
+                _cancellationTokenSource?.Cancel();
+                _isRunning = false;
             }
         }
 
         public event EventHandler IntervalEnded;
-        private CancellationTokenSource _timerCancellationTokenSource;
-        private bool _timerIsRunning;
+
+        private CancellationTokenSource _cancellationTokenSource;
+        private bool _isRunning;
+        private readonly int _intervalInSeconds;
     }
 }

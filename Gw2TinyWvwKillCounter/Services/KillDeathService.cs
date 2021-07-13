@@ -3,25 +3,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Gw2Sharp;
 
-namespace Gw2TinyWvwKillCounter
+namespace Gw2TinyWvwKillCounter.Services
 {
     public class KillDeathService
     {
-        public async Task<(int totalKillsAtReset, int totalDeathsAtReset)> Initialise(string apiKey)
+        public async Task<(int totalKillsAtReset, int totalDeathsAtReset)> InitialiseAndGetTotalKillsDeath(string apiKey)
         {
             _gw2Client = new Gw2Client(new Connection(apiKey));
 
-            (_totalKillsAtReset, _totalDeathsAtReset) = await GetTotalKillsAndDeaths(_gw2Client);
+            (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
+            ResetKillsAndDeaths();
 
-            return (_totalKillsAtReset, _totalDeathsAtReset);
+            return (_totalKills, _totalDeaths);
         }
 
-        public async Task ResetKillsAndDeaths()
+        public void ResetKillsAndDeaths()
         {
-            if (_gw2Client == null) // e.g. happens when api key was invalid on start up
-                return;
-
-            (_totalKillsAtReset, _totalDeathsAtReset) = await GetTotalKillsAndDeaths(_gw2Client);
+            _totalKillsAtReset = _totalKills;
+            _totalDeathsAtReset = _totalDeaths;
         }
 
         public async Task<(int killsSinceReset, int deathsSinceReset, int totalKills, int totalDeaths)> GetKillsAndDeathsSinceReset()
@@ -46,10 +45,10 @@ namespace Gw2TinyWvwKillCounter
             var achievements = achievementsTask.Result;
             var account      = accountTask.Result; // todo weg
 
-            Test = $"{DateTime.Now} now\n" + // todo ganz weg
-                   $"{account.HttpResponseInfo.LastModified.Value.ToLocalTime().DateTime} account last-modified \n" +
-                   $"{characters.HttpResponseInfo.Date.ToLocalTime().DateTime} date\n" +
-                   $"{characters.HttpResponseInfo.Expires.Value.ToLocalTime().DateTime} expire";
+            Test = $"{DateTime.Now:HH:mm} now\n" + // todo ganz weg
+                   $"{characters.HttpResponseInfo.Date.ToLocalTime().DateTime:HH:mm} date\n" +
+                   $"{characters.HttpResponseInfo.Expires.Value.ToLocalTime().DateTime:HH:mm} expire\n" +
+                   $"{account.HttpResponseInfo.LastModified.Value.ToLocalTime().DateTime:HH:mm} account last-modified";
 
             var totalDeaths = characters.Sum(c => c.Deaths);
             var totalKills  = achievements.Single(a => a.Id == REALM_AVENGER_ACHIEVEMENT_ID).Current;

@@ -4,17 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewAndViewModels="clr-namespace:Gw2TinyWvwKillCounter.ViewAndViewModels"
-        xmlns:gw2TinyWvwKillCounter="clr-namespace:Gw2TinyWvwKillCounter"
+        xmlns:icon="clr-namespace:Gw2TinyWvwKillCounter.Icon"
         mc:Ignorable="d"
         Topmost="True"
-        MouseDown="SettingsView_OnMouseDown"
+        MouseDown="DragWindowWithLeftMouseButton"
         WindowStyle="None" AllowsTransparency="True"
-        Width="100" SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        Title="Settings"
         d:DataContext="{d:DesignInstance Type=viewAndViewModels:SettingsDialogViewModel, IsDesignTimeCreatable=false}">
     <Window.Background>
         <SolidColorBrush Color="Black" Opacity="0.5" />
     </Window.Background>
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical"
+                Margin="5">
         <TextBlock Text="Enter API key with permissions for Account, Progression, Characters" 
                    FontWeight="Bold"
                    Foreground="LightGray"/>
@@ -26,7 +29,7 @@
                     ToolTip="Save entered API key">
                 <Viewbox Width="17" Height="17">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="LightGreen" Data="{x:Static gw2TinyWvwKillCounter:Icons.Tick}" />
+                        <Path Fill="LightGreen" Data="{x:Static icon:Icons.Tick}" />
                     </Canvas>
                 </Viewbox>
             </Button>
@@ -36,7 +39,7 @@
                     ToolTip="Close window without saving changes">
                 <Viewbox Width="17" Height="17">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="LightCoral" Data="{x:Static gw2TinyWvwKillCounter:Icons.Cross}" />
+                        <Path Fill="LightCoral" Data="{x:Static icon:Icons.Cross}" />
                     </Canvas>
                 </Viewbox>
             </Button>

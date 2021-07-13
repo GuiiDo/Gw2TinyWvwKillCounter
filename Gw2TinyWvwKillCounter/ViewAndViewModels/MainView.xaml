@@ -5,15 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:settings="clr-namespace:Gw2TinyWvwKillCounter.Properties"
-        xmlns:gw2TinyWvwKillCounter="clr-namespace:Gw2TinyWvwKillCounter"
         xmlns:viewAndViewModels="clr-namespace:Gw2TinyWvwKillCounter.ViewAndViewModels"
+        xmlns:icon="clr-namespace:Gw2TinyWvwKillCounter.Icon"
         mc:Ignorable="d"
         Top="{Binding WindowTop, Source={x:Static settings:Settings.Default}, Mode=TwoWay}"
         Left="{Binding WindowLeft, Source={x:Static settings:Settings.Default}, Mode=TwoWay}"
-        MouseDown="MainView_OnMouseDown"
+        MouseDown="DragWindowWithLeftMouseButton"
         Topmost="True"
         WindowStyle="None" AllowsTransparency="True"
         SizeToContent="WidthAndHeight"
+        Title="GW2 Tiny WvW Kill Counter"
         d:DataContext="{d:DesignInstance Type=viewAndViewModels:MainViewModel, IsDesignTimeCreatable=true}">
     <Window.Background>
         <SolidColorBrush Color="Black" Opacity="0.5"/>
@@ -27,6 +28,7 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <StackPanel Orientation="Vertical">
+        <!--Buttons-->
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding ResetKillsAndDeathsCommand}"
                     IsEnabled="{Binding ResetButtonIsEnabled}"
@@ -35,7 +37,7 @@
                     BorderThickness="0">
                 <Viewbox Width="17" Height="17">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="LightGray" Data="{x:Static gw2TinyWvwKillCounter:Icons.Zero}" />
+                        <Path Fill="LightGray" Data="{x:Static icon:Icons.Zero}" />
                     </Canvas>
                 </Viewbox>
             </Button>
@@ -45,7 +47,7 @@
                     BorderThickness="0">
                 <Viewbox Width="17" Height="17">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="LightGray" Data="{x:Static gw2TinyWvwKillCounter:Icons.Setting}" />
+                        <Path Fill="LightGray" Data="{x:Static icon:Icons.Setting}" />
                     </Canvas>
                 </Viewbox>
             </Button>
@@ -54,7 +56,7 @@
                     ToolTip="Close program">
                 <Viewbox Width="17" Height="17">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="LightGray" Data="{x:Static gw2TinyWvwKillCounter:Icons.Cross}" />
+                        <Path Fill="LightGray" Data="{x:Static icon:Icons.Cross}" />
                     </Canvas>
                 </Viewbox>
                 <b:Interaction.Triggers>
@@ -65,25 +67,26 @@
                 </b:Interaction.Triggers>
             </Button>
         </StackPanel>
+        <!--Kills-->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="K" 
+                       ToolTip="{Binding TotalKillsTooltip}"
                        Margin="2 0 0 0"
                        Width="12"
                        Foreground="DarkGray"/>
             <TextBlock Text="{Binding KillsSinceReset}"
-                       ToolTip="{Binding TotalKillsTooltip}"
+                       ToolTip="{Binding KillsPerIntervalLog}"
                        Foreground="LightGreen" />
         </StackPanel>
+        <!--Deaths-->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="D" 
+                       ToolTip="{Binding TotalDeathsTooltip}"
                        Margin="2 0 0 0"
                        Width="12"
                        Foreground="DarkGray"/>
             <TextBlock Text="{Binding DeathsSinceReset}"
-                       ToolTip="{Binding TotalDeathsTooltip}"
                        Foreground="LightCoral" />
         </StackPanel>
-        
-      
     </StackPanel>
 </Window>

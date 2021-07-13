@@ -17,21 +17,21 @@ namespace Gw2TinyWvwKillCounter.Services
         private static void ShowUnobservedTaskExceptionAfterGarbageCollection(object sender, UnobservedTaskExceptionEventArgs e)
         {
             PreventExceptionEscalationToHigherExceptionHandler(e);
-            MessageBox.Show(e.Exception.ToString(), "Fatal Error");
+            MessageBox.Show(e.Exception.ToString(), "Sorry, Gw2TinyWvwKillCounter crashed :(");
             CloseAppWithoutSavingSettingsAndWithoutWindowsExceptionDialog();
         }
 
         private static void ShowUiThreadException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             PreventExceptionEscalationToHigherExceptionHandler(e);
-            MessageBox.Show(e.Exception.ToString(), "Fatal Error");
+            MessageBox.Show(e.Exception.ToString(), "Sorry, Gw2TinyWvwKillCounter crashed :(");
             CloseAppWithoutSavingSettingsAndWithoutWindowsExceptionDialog();
         }
 
         private static void ShowAllThreadException(object sender, UnhandledExceptionEventArgs e)
         {
             var unhandledException = e.ExceptionObject.ToString();
-            MessageBox.Show(unhandledException, "Fatal Error");
+            MessageBox.Show(unhandledException, "Sorry, Gw2TinyWvwKillCounter crashed :(");
             CloseAppWithoutSavingSettingsAndWithoutWindowsExceptionDialog();
         }
 

@@ -1,19 +1,19 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Gw2Sharp;
 using Gw2Sharp.WebApi.Exceptions;
 using Gw2Sharp.WebApi.V2.Models;
+using Gw2TinyWvwKillCounter.ViewAndViewModels;
 
-namespace Gw2TinyWvwKillCounter
+namespace Gw2TinyWvwKillCounter.Services
 {
-    public class ApiKeyValidation
+    public class ApiKeyService
     {
         public static async Task<bool> ApiKeyIsInvalid(string apiKey)
         {
             if(string.IsNullOrWhiteSpace(apiKey))
             {
-                MessageBox.Show("API key is missing. Set API key in settings.");
+                new ErrorDialogView("API key is missing. Set API key in settings.").ShowDialog();
                 return true;
             }
 
@@ -21,26 +21,25 @@ namespace Gw2TinyWvwKillCounter
             var gw2Client  = new Gw2Client(connection);
             TokenInfo tokenInfo;
 
-
             try
             {
                 tokenInfo = await gw2Client.WebApi.V2.TokenInfo.GetAsync();
             }
             catch (InvalidAccessTokenException)
             {
-                MessageBox.Show("Invalid API key.");
+                new ErrorDialogView("Invalid API key.").ShowDialog();
                 return true;
             }
 
             if (ApiKeyIsMissingNecessaryPermissions(tokenInfo))
             {
-                MessageBox.Show("API key is missing permissions. This app needs account, progression and characters permissions.");
+                new ErrorDialogView("API key is missing permissions. This app needs account, progression and characters permissions.").ShowDialog();
                 return true;
             }
 
             return false;
         }
-
+        
         private static bool ApiKeyIsMissingNecessaryPermissions(TokenInfo tokenInfo)
         {
             var tokenPermissions = tokenInfo.Permissions.List.Select(a => a.Value).ToList();

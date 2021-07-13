@@ -11,7 +11,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             InitializeComponent();
         }
 
-        private void MainView_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void DragWindowWithLeftMouseButton(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();

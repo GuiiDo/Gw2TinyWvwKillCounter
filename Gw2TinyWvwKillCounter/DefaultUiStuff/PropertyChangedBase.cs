@@ -9,7 +9,7 @@ namespace Gw2TinyWvwKillCounter.DefaultUiStuff
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -20,7 +20,7 @@ namespace Gw2TinyWvwKillCounter.DefaultUiStuff
                 return false;
 
             oldValue = newValue;
-            OnPropertyChanged(propertyName ?? string.Empty);
+            RaisePropertyChanged(propertyName ?? string.Empty);
             return true;
         }
 
@@ -30,7 +30,7 @@ namespace Gw2TinyWvwKillCounter.DefaultUiStuff
                 return false;
 
             setValue();
-            OnPropertyChanged(propertyName ?? string.Empty);
+            RaisePropertyChanged(propertyName ?? string.Empty);
             return true;
         }
     }

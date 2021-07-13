@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Gw2TinyWvwKillCounter.DefaultUiStuff;
 using Gw2TinyWvwKillCounter.Properties;
 using Gw2TinyWvwKillCounter.Services;
@@ -9,10 +10,11 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
     {
         public MainViewModel()
         {
-            ResetKillsAndDeathsCommand = new RelayCommand(ResetKillsAndDeaths);
-            OpenSettingsCommand        = new RelayCommand(OpenSettings);
-            OnWindowLoadedCommand      = new RelayCommand(OnWindowLoaded);
-            OnWindowClosingCommand     = new RelayCommand(OnWindowClosing);
+            ResetKillsAndDeathsCommand =  new RelayCommand(ResetKillsAndDeaths);
+            OpenSettingsCommand        =  new RelayCommand(OpenSettings);
+            OnWindowLoadedCommand      =  new RelayCommand(OnWindowLoaded);
+            OnWindowClosingCommand     =  new RelayCommand(OnWindowClosing);
+            _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
 
         public string Test // todo weg
@@ -21,8 +23,43 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             set => Set(ref _test, value);
         }
 
-        public string TotalKillsTooltip => $"{_totalKills} total kills (all characters)";
-        public string TotalDeathsTooltip => $"{_totalDeaths} total deaths (all characters)";
+        public string KillsPerIntervalLog // todo weg
+        {
+            get => _killsPerIntervalLog;
+            set => Set(ref _killsPerIntervalLog, value);
+        }
+
+        public string TotalKillsTooltip
+        {
+            get => _totalKillsTooltip;
+            set => Set(ref _totalKillsTooltip, value);
+        }
+
+        public string TotalDeathsTooltip
+        {
+            get => _totalDeathsTooltip;
+            set => Set(ref _totalDeathsTooltip, value);
+        }
+
+        public int TotalKills
+        {
+            get => _totalKills;
+            set
+            {
+                _totalKills       = value;
+                TotalKillsTooltip = $"{value} total kills (all characters)";
+            }
+        }
+
+        public int TotalDeaths
+        {
+            get => _totalDeaths;
+            set
+            {
+                _totalDeaths       = value;
+                TotalDeathsTooltip = $"{value} total deaths (all characters)";
+            }
+        }
 
         public int KillsSinceReset
         {
@@ -46,14 +83,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public RelayCommand ResetKillsAndDeathsCommand { get; set; }
         public RelayCommand OpenSettingsCommand { get; set; }
         public RelayCommand OnWindowClosingCommand { get; set; }
-
-        private void OnWindowClosing()
-        {
-            Settings.Default.Save();
-        }
+        private void OnWindowClosing() => Settings.Default.Save();
 
         private async void OpenSettings()
         {
+            ResetButtonIsEnabled = false;
+
             var settingsDialogView      = new SettingsDialogView();
             var settingsDialogViewModel = new SettingsDialogViewModel(Settings.Default.ApiKey, () => settingsDialogView.Close());
             settingsDialogView.DataContext = settingsDialogViewModel;
@@ -65,59 +100,66 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             Settings.Default.ApiKey = settingsDialogViewModel.ApiKey;
             Settings.Default.Save();
 
-            if (await ApiKeyValidation.ApiKeyIsInvalid(Settings.Default.ApiKey))
+            if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
+            {
+                _asyncTimer.Stop();
                 return;
+            }
 
-            ResetButtonIsEnabled        = false;
-            (_totalKills, _totalDeaths) = await _killDeathService.Initialise(Settings.Default.ApiKey);
-            OnPropertyChanged(nameof(TotalKillsTooltip));
-            OnPropertyChanged(nameof(TotalDeathsTooltip));
+            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
+            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
+            Test                      = _killDeathService.Test;                                       // todo weg
+
             ResetKillsAndDeaths();
+            _asyncTimer.Start();
+
             ResetButtonIsEnabled = true;
         }
 
-        private async void ResetKillsAndDeaths()
+        private void ResetKillsAndDeaths()
         {
-            ResetButtonIsEnabled = false;
-
-            _asyncTimer.Stop();
-
-            await _killDeathService.ResetKillsAndDeaths();
+            _killDeathService.ResetKillsAndDeaths();
             KillsSinceReset  = 0;
             DeathsSinceReset = 0;
-
-            _asyncTimer.Start(INTERVAL_IN_SECONDS);
-            ResetButtonIsEnabled = true;
         }
 
         private async void OnWindowLoaded()
         {
             ResetButtonIsEnabled = false;
-            if (await ApiKeyValidation.ApiKeyIsInvalid(Settings.Default.ApiKey))
+            if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
                 return;
 
-            (_totalKills, _totalDeaths) = await _killDeathService.Initialise(Settings.Default.ApiKey);
-            OnPropertyChanged(nameof(TotalKillsTooltip));
-            OnPropertyChanged(nameof(TotalDeathsTooltip));
-            Test = _killDeathService.Test; // todo weg
+            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
+            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
+            Test                      = _killDeathService.Test;                                       // todo weg
 
-            _asyncTimer.IntervalEnded += OnAsyncTimerIntervalEnded;
-            _asyncTimer.Start(INTERVAL_IN_SECONDS);
+            _asyncTimer.Start();
             ResetButtonIsEnabled = true;
         }
 
         private async void OnAsyncTimerIntervalEnded(object sender, EventArgs e)
         {
-
-            (KillsSinceReset, DeathsSinceReset, _totalKills, _totalDeaths) = await _killDeathService.GetKillsAndDeathsSinceReset();
-            OnPropertyChanged(nameof(TotalKillsTooltip));
-            OnPropertyChanged(nameof(TotalDeathsTooltip));
-            Test = _killDeathService.Test; // todo weg
+            (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeathsSinceReset();
+            Test                                                         = _killDeathService.Test;                                       // todo weg
+            KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
         }
 
-        private const int INTERVAL_IN_SECONDS = 60 * 5;
+        private string AddLogLineAndTruncateLogIfItGetsTooLong(string log) // todo weg
+        {
+            var logLines = _killsPerIntervalLog.Split('\n').ToList();
+            if (logLines.Count > 12)
+            {
+                logLines.Remove(logLines.Last());
+                log = string.Join('\n', logLines);
+            }
+
+            var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
+            return nexLogLine + log;
+        }
+
+        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
+        private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
-        private readonly AsyncTimer _asyncTimer = new AsyncTimer();
         private readonly ShowDialogWithUnhandledExceptionService _showDialogWithUnhandledExceptionService = new ShowDialogWithUnhandledExceptionService();
         private int _killsSinceReset;
         private int _deathsSinceReset;
@@ -125,5 +167,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private int _totalKills;
         private string _test;
         private bool _resetButtonIsEnabled = true;
+        private string _killsPerIntervalLog = string.Empty;
+        private string _totalKillsTooltip;
+        private string _totalDeathsTooltip;
     }
 }

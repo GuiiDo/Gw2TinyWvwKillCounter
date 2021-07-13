@@ -1,11 +1,14 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Gw2TinyWvwKillCounter
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(UIElement), new FrameworkPropertyMetadata(30 * 1000));
+            ToolTipService.ShowOnDisabledProperty.OverrideMetadata(typeof(UIElement), new FrameworkPropertyMetadata(true));
+        }
     }
 }

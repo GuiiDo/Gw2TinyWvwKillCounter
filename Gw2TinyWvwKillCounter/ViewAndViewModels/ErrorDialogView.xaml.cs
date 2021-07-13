@@ -3,10 +3,12 @@ using System.Windows.Input;
 
 namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {
-    public partial class SettingsDialogView : Window
+    public partial class ErrorDialogView : Window
     {
-        public SettingsDialogView()
+        public ErrorDialogView(string errorMessage)
         {
+            // in code behind because dialog width didnt adjust to errorMessage otherwise
+            DataContext = new ErrorDialogViewModel(errorMessage, Close);
             InitializeComponent();
         }
 
