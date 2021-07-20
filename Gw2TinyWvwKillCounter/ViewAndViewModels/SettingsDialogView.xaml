@@ -18,6 +18,16 @@
     </Window.Background>
     <StackPanel Orientation="Vertical"
                 Margin="5">
+        <TextBlock Text="Window size" 
+                   FontWeight="Bold"
+                   Foreground="LightGray"/>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox SelectedValue="{Binding UiScalingInPercent}" 
+                      ItemsSource="{Binding UiScalingInPercentValues}"/>
+            <TextBlock Text="%" 
+                       FontWeight="Bold"
+                       Foreground="LightGray"/>
+        </StackPanel>
         <TextBlock Text="Enter API key with permissions for Account, Progression, Characters" 
                    FontWeight="Bold"
                    Foreground="LightGray"/>

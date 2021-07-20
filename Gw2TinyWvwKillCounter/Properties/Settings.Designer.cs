@@ -58,5 +58,17 @@ namespace Gw2TinyWvwKillCounter.Properties {
                 this["WindowLeft"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public uint ScalingInPercent {
+            get {
+                return ((uint)(this["ScalingInPercent"]));
+            }
+            set {
+                this["ScalingInPercent"] = value;
+            }
+        }
     }
 }

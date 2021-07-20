@@ -17,6 +17,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
 
+        public UiScaling UiScaling { get; set; } = new UiScaling();
+
         public string Test // todo weg
         {
             get => _test;
@@ -90,12 +92,15 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             ResetButtonIsEnabled = false;
 
             var settingsDialogView      = new SettingsDialogView();
-            var settingsDialogViewModel = new SettingsDialogViewModel(Settings.Default.ApiKey, () => settingsDialogView.Close());
+            var settingsDialogViewModel = new SettingsDialogViewModel(Settings.Default.ApiKey, UiScaling, () => settingsDialogView.Close());
             settingsDialogView.DataContext = settingsDialogViewModel;
             settingsDialogView.ShowDialog();
 
             if (settingsDialogViewModel.DialogResult == DialogResult.Cancel)
+            {
+                UiScaling.RestoreUiScaling();
                 return;
+            }
 
             Settings.Default.ApiKey = settingsDialogViewModel.ApiKey;
             Settings.Default.Save();

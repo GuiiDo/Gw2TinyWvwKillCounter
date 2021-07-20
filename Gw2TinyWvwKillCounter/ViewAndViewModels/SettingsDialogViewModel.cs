@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Gw2TinyWvwKillCounter.DefaultUiStuff;
 
@@ -6,10 +8,14 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {
     public class SettingsDialogViewModel
     {
-        public SettingsDialogViewModel(string apiKey, Action closeWindow)
+        public SettingsDialogViewModel(string apiKey, UiScaling uiScaling, Action closeWindow)
         {
-            ApiKey        = apiKey;
-            _closeWindow  = closeWindow;
+            uiScaling.BackupUiScaling();
+
+            ApiKey       = apiKey;
+            _uiScaling   = uiScaling;
+            _closeWindow = closeWindow;
+
             SaveCommand   = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
@@ -23,6 +29,21 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public DialogResult DialogResult { get; set; } = DialogResult.Cancel;
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand CancelCommand { get; set; }
+        public string UiScalingInPercent
+        {
+            get => _uiScaling.ScalingInPercent.ToString();
+            set => _uiScaling.ScalingInPercent = uint.Parse(value);
+        }
+        public ObservableCollection<string> UiScalingInPercentValues { get; set; } = CreateValuesFrom50to500inStepsOf10();
+
+        private static ObservableCollection<string> CreateValuesFrom50to500inStepsOf10()
+        {
+            var stringValues = Enumerable.Range(5, 46)
+                                         .Select(i => i * 10)
+                                         .Select(i => i.ToString());
+
+            return new ObservableCollection<string>(stringValues);
+        }
 
         private void Cancel()
         {
@@ -38,6 +59,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private readonly Action _closeWindow;
         private string _apiKey;
+        private readonly UiScaling _uiScaling;
         private static readonly Regex _invalidApiKeyCharacters = new Regex("[^a-zA-Z0-9-]");
     }
 }
