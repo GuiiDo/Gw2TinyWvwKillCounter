@@ -18,17 +18,18 @@
     </Window.Background>
     <StackPanel Orientation="Vertical"
                 Margin="5">
-        <TextBlock Text="Error "
+        <TextBlock Text="Error :("
                    FontWeight="Bold"
-                   FontSize="15"
+                   FontSize="25"
                    Foreground="White" />
         <TextBlock Text="{Binding ErrorMessage}"
+                   FontSize="20"
                    Foreground="LightGray" />
         <Button Command="{Binding ConfirmCommand}"
                 Background="Transparent"
                 BorderThickness="0"
                 HorizontalAlignment="Left">
-            <Viewbox Width="17" Height="17">
+            <Viewbox Width="34" Height="34">
                 <Canvas Width="24" Height="24">
                     <Path Fill="LightGreen" Data="{x:Static icon:Icons.Tick}" />
                 </Canvas>
