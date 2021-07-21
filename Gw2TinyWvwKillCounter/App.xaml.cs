@@ -7,7 +7,7 @@ namespace Gw2TinyWvwKillCounter
     {
         public App()
         {
-            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(UIElement), new FrameworkPropertyMetadata(30 * 1000));
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(UIElement), new FrameworkPropertyMetadata(60 * 1000));
             ToolTipService.ShowOnDisabledProperty.OverrideMetadata(typeof(UIElement), new FrameworkPropertyMetadata(true));
         }
     }
