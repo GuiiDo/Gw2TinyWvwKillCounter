@@ -107,7 +107,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
             if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
             {
-                _asyncTimer.Stop();
+                await _asyncTimer.Stop();
                 return;
             }
 

@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Gw2TinyWvwKillCounter
 {
+    // This is my try at making an async await based timer instead of using one of the .NET timer classes. 
+    // exceptions or starting multiple timers in parallel due to reentrancy and race conditions can easily happen around the awaits in this class. 
+    // workaround if this causes too much problems: use one of .NET Timer class. start it once, never stop it. handle different cases in the eventHandler/callback of the timer.
     public class AsyncTimer
     {
         public AsyncTimer(int intervalInSeconds)
@@ -15,25 +18,33 @@ namespace Gw2TinyWvwKillCounter
         {
             // stop() call could be replaced by a if(_timerIsRunning)-guard, but then next interval after Start() ends "randomly"
             // in less than _intervalInSeconds because the timer is already running.
-            Stop();
-            _isRunning               = true;
+            await Stop();
+
             _cancellationTokenSource = new CancellationTokenSource();
+            _isRunning = true;
 
             while (_isRunning)
             {
-                await Task.Delay(TimeSpan.FromSeconds(_intervalInSeconds), _cancellationTokenSource.Token);
-
-                if (_isRunning) // not sure if necessary: Stop() called between Task.Delay ended and continuation on message pump is called? 
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(_intervalInSeconds), _cancellationTokenSource.Token);
                     IntervalEnded?.Invoke(this, EventArgs.Empty);
+                }
+                catch (OperationCanceledException)
+                {
+                    _isRunning = false;
+                }
             }
         }
 
-        public void Stop()
+        public async Task Stop()
         {
             if (_isRunning)
             {
                 _cancellationTokenSource?.Cancel();
-                _isRunning = false;
+
+                while (_isRunning)
+                    await Task.Delay(500);
             }
         }
 
