@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Gw2TinyWvwKillCounter.DefaultUiStuff;
 using Gw2TinyWvwKillCounter.Properties;
 using Gw2TinyWvwKillCounter.Services;
@@ -11,7 +12,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public MainViewModel()
         {
             ResetKillsAndDeathsCommand =  new RelayCommand(ResetKillsAndDeaths);
-            OpenSettingsCommand        =  new RelayCommand(OpenSettings);
+            OpenSettingsCommand        =  new RelayCommand(OpenSettingsWrapper);
             OnWindowLoadedCommand      =  new RelayCommand(OnWindowLoaded);
             OnWindowClosingCommand     =  new RelayCommand(OnWindowClosing);
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
@@ -87,38 +88,42 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public RelayCommand OnWindowClosingCommand { get; set; }
         private void OnWindowClosing() => Settings.Default.Save();
 
-        private async void OpenSettings()
+        private async void OpenSettingsWrapper()
         {
             ResetButtonIsEnabled = false;
+            await OpenSettings();
+            ResetButtonIsEnabled = true;
+        }
 
+        private async Task OpenSettings()
+        {
             var settingsDialogView      = new SettingsDialogView();
             var settingsDialogViewModel = new SettingsDialogViewModel(Settings.Default.ApiKey, UiScaling, () => settingsDialogView.Close());
             settingsDialogView.DataContext = settingsDialogViewModel;
             settingsDialogView.ShowDialog();
 
             if (settingsDialogViewModel.DialogResult == DialogResult.Cancel)
-            {
-                UiScaling.RestoreUiScaling();
                 return;
-            }
+
+            if (Settings.Default.ApiKey == settingsDialogViewModel.ApiKey)
+                return;
 
             Settings.Default.ApiKey = settingsDialogViewModel.ApiKey;
             Settings.Default.Save();
 
+            await _asyncTimer.Stop();
+
+            KillsSinceReset  = 0;
+            DeathsSinceReset = 0;
+
             if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
-            {
-                await _asyncTimer.Stop();
                 return;
-            }
 
             (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
             KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
             Test                      = _killDeathService.Test;                                       // todo weg
 
-            ResetKillsAndDeaths();
             _asyncTimer.Start();
-
-            ResetButtonIsEnabled = true;
         }
 
         private void ResetKillsAndDeaths()
@@ -131,6 +136,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private async void OnWindowLoaded()
         {
             ResetButtonIsEnabled = false;
+            await StartCallingApiIfApiKeyIsValid();
+            ResetButtonIsEnabled = true;
+        }
+
+        private async Task StartCallingApiIfApiKeyIsValid()
+        {
             if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
                 return;
 
@@ -139,7 +150,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             Test                      = _killDeathService.Test;                                       // todo weg
 
             _asyncTimer.Start();
-            ResetButtonIsEnabled = true;
         }
 
         private async void OnAsyncTimerIntervalEnded(object sender, EventArgs e)
@@ -158,11 +168,11 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
                 log = string.Join('\n', logLines);
             }
 
-            var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
+            var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n";
             return nexLogLine + log;
         }
 
-        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
+        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
         private readonly ShowDialogWithUnhandledExceptionService _showDialogWithUnhandledExceptionService = new ShowDialogWithUnhandledExceptionService();

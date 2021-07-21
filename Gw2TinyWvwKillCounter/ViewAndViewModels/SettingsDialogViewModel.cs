@@ -47,6 +47,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private void Cancel()
         {
+            _uiScaling.RestoreUiScaling();
             DialogResult = DialogResult.Cancel;
             _closeWindow();
         }
