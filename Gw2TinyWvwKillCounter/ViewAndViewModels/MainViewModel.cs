@@ -172,7 +172,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             return nexLogLine + log;
         }
 
-        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1;
+        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
         private readonly ShowDialogWithUnhandledExceptionService _showDialogWithUnhandledExceptionService = new ShowDialogWithUnhandledExceptionService();
