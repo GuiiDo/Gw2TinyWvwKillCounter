@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## !!!!!!!!! UNDER CONSTRUCTION !!!!!!!!!!!!
 
 You can use the [editor on GitHub](https://github.com/Taschenbuch/Gw2TinyWvwKillCounter/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
