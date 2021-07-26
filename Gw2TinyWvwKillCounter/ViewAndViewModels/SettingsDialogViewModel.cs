@@ -13,12 +13,14 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             uiScaling.BackupUiScaling();
 
             ApiKey       = apiKey;
-            _uiScaling   = uiScaling;
+            UiScaling    = uiScaling;
             _closeWindow = closeWindow;
 
             SaveCommand   = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
+
+        public UiScaling UiScaling { get; set; }
 
         public string ApiKey
         {
@@ -31,8 +33,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public RelayCommand CancelCommand { get; set; }
         public string UiScalingInPercent
         {
-            get => _uiScaling.ScalingInPercent.ToString();
-            set => _uiScaling.ScalingInPercent = uint.Parse(value);
+            get => UiScaling.ScalingInPercent.ToString();
+            set => UiScaling.ScalingInPercent = uint.Parse(value);
         }
         public ObservableCollection<string> UiScalingInPercentValues { get; set; } = CreateValuesFrom50to500inStepsOf10();
 
@@ -47,7 +49,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private void Cancel()
         {
-            _uiScaling.RestoreUiScaling();
+            UiScaling.RestoreUiScaling();
             DialogResult = DialogResult.Cancel;
             _closeWindow();
         }
@@ -60,7 +62,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private readonly Action _closeWindow;
         private string _apiKey;
-        private readonly UiScaling _uiScaling;
         private static readonly Regex _invalidApiKeyCharacters = new Regex("[^a-zA-Z0-9-]");
     }
 }
