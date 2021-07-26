@@ -159,7 +159,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
                 log = string.Join('\n', logLines);
             }
 
-            var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n";
+            var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
             return nexLogLine + log;
         }
 
