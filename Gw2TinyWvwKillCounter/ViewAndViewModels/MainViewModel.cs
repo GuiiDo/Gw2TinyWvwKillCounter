@@ -20,12 +20,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         public UiScaling UiScaling { get; set; } = new UiScaling();
 
-        public string Test // todo weg
-        {
-            get => _test;
-            set => Set(ref _test, value);
-        }
-
         public string KillsPerIntervalLog // todo weg
         {
             get => _killsPerIntervalLog;
@@ -121,7 +115,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
             (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
             KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
-            Test                      = _killDeathService.Test;                                       // todo weg
 
             _asyncTimer.Start();
         }
@@ -147,7 +140,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
             (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
             KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
-            Test                      = _killDeathService.Test;                                       // todo weg
 
             _asyncTimer.Start();
         }
@@ -155,7 +147,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private async void OnAsyncTimerIntervalEnded(object sender, EventArgs e)
         {
             (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeathsSinceReset();
-            Test                                                         = _killDeathService.Test;                                       // todo weg
             KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
         }
 
@@ -180,7 +171,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private int _deathsSinceReset;
         private int _totalDeaths;
         private int _totalKills;
-        private string _test;
         private bool _resetButtonIsEnabled = true;
         private string _killsPerIntervalLog = string.Empty;
         private string _totalKillsTooltip;

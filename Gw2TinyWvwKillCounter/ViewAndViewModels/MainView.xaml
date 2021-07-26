@@ -33,7 +33,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding ResetKillsAndDeathsCommand}"
                         IsEnabled="{Binding ResetButtonIsEnabled}"
-                        ToolTip="{Binding Test}"
+                        ToolTip="Reset kills and deaths to 0"
                         Background="Transparent"
                         BorderThickness="0">
                     <Viewbox Width="17" Height="17">
