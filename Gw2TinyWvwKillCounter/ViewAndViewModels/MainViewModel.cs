@@ -99,24 +99,31 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             if (settingsDialogViewModel.DialogResult == DialogResult.Cancel)
                 return;
 
-            if (Settings.Default.ApiKey == settingsDialogViewModel.ApiKey)
+            var apiKeyIsValid = await ApiKeyService.ApiKeyIsInvalid(settingsDialogViewModel.ApiKey) == false;
+            var apiKeyIsNew = Settings.Default.ApiKey != settingsDialogViewModel.ApiKey;
+
+            var apiKeyIsCurrentlyUsedToCallApi = apiKeyIsValid && apiKeyIsNew == false;
+            if (apiKeyIsCurrentlyUsedToCallApi)
                 return;
+
+            await _asyncTimer.Stop();
 
             Settings.Default.ApiKey = settingsDialogViewModel.ApiKey;
             Settings.Default.Save();
 
-            await _asyncTimer.Stop();
-
             KillsSinceReset  = 0;
             DeathsSinceReset = 0;
+            TotalKills       = 0;
+            TotalDeaths      = 0;
+            KillsPerIntervalLog = string.Empty; // todo weg
 
-            if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
-                return;
+            if (apiKeyIsValid && apiKeyIsNew) // "&& apiKeyIsNew" is not necessary but helps understanding the code.
+            {
+                (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(settingsDialogViewModel.ApiKey);
+                KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
 
-            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
-            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
-
-            _asyncTimer.Start();
+                _asyncTimer.Start();
+            }
         }
 
         private void ResetKillsAndDeaths()
@@ -139,7 +146,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
                 return;
 
             (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
-            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
+            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
 
             _asyncTimer.Start();
         }
@@ -159,10 +166,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
                 log = string.Join('\n', logLines);
             }
 
+            //var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n"; // todo for tests only. has to be commented in commit
             var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
             return nexLogLine + log;
         }
 
+        //private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1; // todo for tests only. has to be commented in commit
         private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
