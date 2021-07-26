@@ -29,7 +29,7 @@ namespace Gw2TinyWvwKillCounter.Services
             {
                 (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
             }
-            catch (UnexpectedStatusException e)
+            catch (UnexpectedStatusException)
             {
                 // intentionally no catch code!
                 // when api server does not respond (error code 500, 502). the app will just return the previous kill/death values and hope that on the end of the next interval
@@ -44,7 +44,7 @@ namespace Gw2TinyWvwKillCounter.Services
             return (killsSinceReset, deathsSinceReset, _totalKills, _totalDeaths);
         }
 
-        private async Task<(int totalKills, int totalDeaths)> GetTotalKillsAndDeaths(Gw2Client gw2Client)
+        private static async Task<(int totalKills, int totalDeaths)> GetTotalKillsAndDeaths(Gw2Client gw2Client)
         {
             var charactersTask   = gw2Client.WebApi.V2.Characters.AllAsync();
             var achievementsTask = gw2Client.WebApi.V2.Account.Achievements.GetAsync();

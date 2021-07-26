@@ -11,10 +11,13 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
     {
         public MainViewModel()
         {
+            ShowDialogWithUnhandledExceptionService.InitializeExceptionHandling();
+
             ResetKillsAndDeathsCommand =  new RelayCommand(ResetKillsAndDeaths);
             OpenSettingsCommand        =  new RelayCommand(OpenSettingsWrapper);
             OnWindowLoadedCommand      =  new RelayCommand(OnWindowLoaded);
             OnWindowClosingCommand     =  new RelayCommand(OnWindowClosing);
+
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
 
@@ -175,7 +178,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
-        private readonly ShowDialogWithUnhandledExceptionService _showDialogWithUnhandledExceptionService = new ShowDialogWithUnhandledExceptionService();
         private int _killsSinceReset;
         private int _deathsSinceReset;
         private int _totalDeaths;

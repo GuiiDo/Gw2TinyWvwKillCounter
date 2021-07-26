@@ -6,14 +6,15 @@ using System.Windows.Threading;
 
 namespace Gw2TinyWvwKillCounter.Services
 {
-    public class ShowDialogWithUnhandledExceptionService
+    public static class ShowDialogWithUnhandledExceptionService
     {
-        public ShowDialogWithUnhandledExceptionService()
+        public static void InitializeExceptionHandling()
         {
             TaskScheduler.UnobservedTaskException            += ShowUnobservedTaskExceptionAfterGarbageCollection;
             Application.Current.DispatcherUnhandledException += ShowUiThreadException;
             AppDomain.CurrentDomain.UnhandledException       += ShowAllThreadException;
         }
+
         private static void ShowUnobservedTaskExceptionAfterGarbageCollection(object sender, UnobservedTaskExceptionEventArgs e)
         {
             PreventExceptionEscalationToHigherExceptionHandler(e);
