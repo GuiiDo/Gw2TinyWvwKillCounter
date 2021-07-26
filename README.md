@@ -1,4 +1,30 @@
 # Gw2TinyWvwKillCounter
- tiny window which shows kills and death of current wvw session
+Tiny window which shows kills and death of current WvW session ingame for Guild Wars 2.
 
-# ! Under construction !
+## Just want to use it?
+[click here to download and use the tool](https://taschenbuch.github.io/Gw2TinyWvwKillCounter/)
+
+## For developers
+
+### General
+- C#
+- UI in WPF with MVVM pattern
+- icons from https://materialdesignicons.com/
+
+### Build it
+- clone repo
+- open the solution in Visual Studio 2019 with .NET 5 (e.g. Version 16.8 or later) 
+- you can now simply build it with Build -> Build solution
+- if you want to have a single file .exe-file instead, do the following steps
+  - Tools -> command line -> developer command prompt
+  - copy this command into the command prompt and press enter:  
+ ```dotnet publish --runtime win-x64 -c  Release --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true```
+  - the .exe will be in \Gw2TinyWvwKillCounter\bin\Release\net5.0-windows\win-x64\publish
+  - the command has to be used because the Build -> publish dialog in visual studio is not able to do that yet (version 16.10.2).
+
+### Delete Settings
+- to reset the saved settings for the tool to default (api key etc.), copy this path into the windows explorer path field and press enter: ```%localappdata%\Gw2TinyWvwKillCounter```
+- Then delete the content or the whole folder
+
+### Contributing
+If you find a bug or have a feature request, feel free to write me directly or open an issue.
