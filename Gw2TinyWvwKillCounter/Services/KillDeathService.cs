@@ -23,7 +23,7 @@ namespace Gw2TinyWvwKillCounter.Services
             _totalDeathsAtReset = _totalDeaths;
         }
 
-        public async Task<(int killsSinceReset, int deathsSinceReset, int totalKills, int totalDeaths)> GetKillsAndDeathsSinceReset()
+        public async Task<(int killsSinceReset, int deathsSinceReset, int totalKills, int totalDeaths)> GetKillsAndDeaths()
         {
             (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
 

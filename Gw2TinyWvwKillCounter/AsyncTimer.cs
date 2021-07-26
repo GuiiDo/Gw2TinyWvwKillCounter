@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Gw2TinyWvwKillCounter
 {
-    // This is my try at making an async await based timer instead of using one of the .NET timer classes. 
+    // This is my attempt to create an async await based timer instead of using one of the .NET timer classes. 
     // exceptions or starting multiple timers in parallel due to reentrancy and race conditions can easily happen around the awaits in this class. 
     // workaround if this causes too much problems: use one of .NET Timer class. start it once, never stop it. handle different cases in the eventHandler/callback of the timer.
     public class AsyncTimer

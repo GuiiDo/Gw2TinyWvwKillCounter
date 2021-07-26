@@ -146,7 +146,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private async void OnAsyncTimerIntervalEnded(object sender, EventArgs e)
         {
-            (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeathsSinceReset();
+            (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeaths();
             KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
         }
 
