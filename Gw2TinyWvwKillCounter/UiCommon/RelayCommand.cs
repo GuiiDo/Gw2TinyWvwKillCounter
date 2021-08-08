@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Gw2TinyWvwKillCounter.DefaultUiStuff
+namespace Gw2TinyWvwKillCounter.UiCommon
 {
     public class RelayCommand : ICommand
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Gw2Sharp;
 using Gw2Sharp.WebApi.Exceptions;
 
-namespace Gw2TinyWvwKillCounter.Services
+namespace Gw2TinyWvwKillCounter.Api
 {
     public class KillDeathService
     {

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Gw2TinyWvwKillCounter.ViewAndViewModels.SettingsDialogView"
+﻿<Window x:Class="Gw2TinyWvwKillCounter.ViewAndViewModels.AddApiKeyDialogView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,8 +11,8 @@
         WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
-        Title="Settings"
-        d:DataContext="{d:DesignInstance Type=viewAndViewModels:SettingsDialogViewModel, IsDesignTimeCreatable=false}">
+        Title="Add API key"
+        d:DataContext="{d:DesignInstance Type=viewAndViewModels:AddApiKeyDialogViewModel, IsDesignTimeCreatable=false}">
     <Window.Background>
         <SolidColorBrush Color="Black" Opacity="0.9" />
     </Window.Background>
@@ -48,87 +48,44 @@
     <Border BorderBrush="Bisque" BorderThickness="2">
         <StackPanel Orientation="Vertical"
                     Margin="10">
-            <!--ui scaling-->
-            <TextBlock Text="UI scaling"
-                       FontWeight="Bold"
+            <!--api key name-->
+            <TextBlock Text="API key name"
                        FontSize="20"
+                       FontWeight="Bold"
                        Foreground="LightGray" />
-            <TextBlock Text="Scale main window for better visibility."
+            <TextBlock Text="Enter a name for the API key (e.g. account name or character name)."
                        FontSize="20"
                        Foreground="LightGray"
                        Margin="0 0 0 0" />
-            <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedValue="{Binding UiScalingInPercent}"
-                          ItemsSource="{Binding UiScalingInPercentSelectableValues}"
-                          ToolTip="Change to scale main window"
-                          FontSize="20"
-                          MinWidth="80" />
-                <TextBlock Text="%"
-                           FontSize="20"
-                           Foreground="LightGray"
-                           Margin="5 0 0 0"
-                           VerticalAlignment="Center" />
-            </StackPanel>
+            <TextBox Text="{Binding ApiKeyName, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Enter API key name here"
+                     FontSize="20" />
             <!--api key-->
             <TextBlock Text="API key"
                        FontSize="20"
                        FontWeight="Bold"
                        Foreground="LightGray"
                        Margin="0 20 0 0" />
-            <TextBlock Text="Click + to add an API key or click trash can to remove the selected API key."
+            <TextBlock Text="Enter API key with permissions for Account, Progression, Characters."
                        FontSize="20"
-                       Foreground="LightGray"
-                       Margin="0 0 0 0" />
-            <TextBlock Text="Use the drop down to select which API key should be used."
-                       FontSize="20"
-                       Foreground="LightGray"
-                       Margin="0 0 0 0" />
-            <StackPanel Orientation="Horizontal">
-                <!--add api key-->
-                <Button Command="{Binding AddApiKeyCommand}"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ToolTip="Add new API key">
-                    <Viewbox Width="34" Height="34">
-                        <Canvas Width="24" Height="24">
-                            <Path Fill="LightGreen" Data="{x:Static icon:Icons.Plus}" />
-                        </Canvas>
-                    </Viewbox>
-                </Button>
-                <!--remove api key-->
-                <Button Command="{Binding RemoveApiKeyCommand}"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ToolTip="Remove currently selected API key"
-                        Visibility="{Binding ApiKeysComboBoxAndDeleteButtonAreVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Viewbox Width="34" Height="34">
-                        <Canvas Width="24" Height="24">
-                            <Path Fill="LightCoral" Data="{x:Static icon:Icons.TrashCan}" />
-                        </Canvas>
-                    </Viewbox>
-                </Button>
-                <!--select api key-->
-                <ComboBox ItemsSource="{Binding ApiKeys}"
-                          SelectedValue="{Binding SelectedApiKey, Mode=TwoWay}"
-                          SelectedItem="{Binding SelectedApiKey}"
-                          DisplayMemberPath="Name"
-                          ToolTip="Select API key to be used"
-                          FontSize="20"
-                          MinWidth="300"
-                          Visibility="{Binding ApiKeysComboBoxAndDeleteButtonAreVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </StackPanel>
-            <TextBlock Text="{Binding SelectedApiKeyString}"
-                       FontSize="20"
-                       Foreground="LightGray"
-                       VerticalAlignment="Center"
-                       Margin="0 0 0 0" />
+                       Foreground="LightGray" />
+            <TextBlock>
+                <Hyperlink Command="{Binding OpenApiKeyWebsiteCommand}"
+                           ToolTip="Click to open website in browser where API key can be created"
+                           FontSize="20">
+                    Click to create API key
+                </Hyperlink>
+            </TextBlock>
+            <TextBox Text="{Binding ApiKeyAsString, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Enter API key here"
+                     FontSize="20" />
             <StackPanel Orientation="Horizontal"
                         Margin="0 20 0 0">
                 <!--ok-->
                 <Button Command="{Binding SaveCommand}"
                         Background="Transparent"
                         BorderThickness="0"
-                        ToolTip="Save settings">
+                        ToolTip="Save entered API key">
                     <Viewbox Width="34" Height="34">
                         <Canvas Width="24" Height="24">
                             <Path Fill="LightGreen" Data="{x:Static icon:Icons.Tick}" />
@@ -139,7 +96,7 @@
                 <Button Command="{Binding CancelCommand}"
                         Background="Transparent"
                         BorderThickness="0"
-                        ToolTip="Close without saving settings">
+                        ToolTip="Close without saving API key">
                     <Viewbox Width="34" Height="34">
                         <Canvas Width="24" Height="24">
                             <Path Fill="LightCoral" Data="{x:Static icon:Icons.Cross}" />

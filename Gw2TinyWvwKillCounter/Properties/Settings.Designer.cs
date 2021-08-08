@@ -26,12 +26,12 @@ namespace Gw2TinyWvwKillCounter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ApiKey {
+        public string SelectedApiKey {
             get {
-                return ((string)(this["ApiKey"]));
+                return ((string)(this["SelectedApiKey"]));
             }
             set {
-                this["ApiKey"] = value;
+                this["SelectedApiKey"] = value;
             }
         }
         
@@ -68,6 +68,18 @@ namespace Gw2TinyWvwKillCounter.Properties {
             }
             set {
                 this["ScalingInPercent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ApiKeys {
+            get {
+                return ((string)(this["ApiKeys"]));
+            }
+            set {
+                this["ApiKeys"] = value;
             }
         }
     }

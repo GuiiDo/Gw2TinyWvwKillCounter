@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Gw2TinyWvwKillCounter.DefaultUiStuff
+namespace Gw2TinyWvwKillCounter.UiCommon
 {
     public abstract class PropertyChangedBase : INotifyPropertyChanged
     {

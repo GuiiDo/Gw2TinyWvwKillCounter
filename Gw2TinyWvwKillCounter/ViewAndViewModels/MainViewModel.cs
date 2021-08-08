@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Gw2TinyWvwKillCounter.DefaultUiStuff;
+using Gw2TinyWvwKillCounter.Api;
 using Gw2TinyWvwKillCounter.Properties;
-using Gw2TinyWvwKillCounter.Services;
+using Gw2TinyWvwKillCounter.UiCommon;
 
 namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {
@@ -12,11 +12,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public MainViewModel()
         {
             ShowDialogWithUnhandledExceptionService.InitializeExceptionHandling();
-
-            ResetKillsAndDeathsCommand =  new RelayCommand(ResetKillsAndDeaths);
-            OpenSettingsCommand        =  new RelayCommand(OpenSettingsWrapper);
-            OnWindowLoadedCommand      =  new RelayCommand(OnWindowLoaded);
-            OnWindowClosingCommand     =  new RelayCommand(OnWindowClosing);
+            InitializeCommands();
 
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
@@ -79,10 +75,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             set => Set(ref _resetButtonIsEnabled, value);
         }
 
-        public RelayCommand OnWindowLoadedCommand { get; set; }
-        public RelayCommand ResetKillsAndDeathsCommand { get; set; }
-        public RelayCommand OpenSettingsCommand { get; set; }
-        public RelayCommand OnWindowClosingCommand { get; set; }
         private void OnWindowClosing() => Settings.Default.Save();
 
         private async void OpenSettingsWrapper()
@@ -95,24 +87,20 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private async Task OpenSettings()
         {
             var settingsDialogView      = new SettingsDialogView();
-            var settingsDialogViewModel = new SettingsDialogViewModel(Settings.Default.ApiKey, UiScaling, () => settingsDialogView.Close());
+            var settingsDialogViewModel = new SettingsDialogViewModel(UiScaling, () => settingsDialogView.Close());
             settingsDialogView.DataContext = settingsDialogViewModel;
             settingsDialogView.ShowDialog();
 
             if (settingsDialogViewModel.DialogResult == DialogResult.Cancel)
                 return;
 
-            var apiKeyIsValid = await ApiKeyService.ApiKeyIsInvalid(settingsDialogViewModel.ApiKey) == false;
-            var apiKeyIsNew = Settings.Default.ApiKey != settingsDialogViewModel.ApiKey;
+            var apiKeyIsValid = await ApiKeyValidationService.ApiKeyIsInvalid(ApiKeyService.PersistedSelectedApiKey.Value) == false;
 
-            var apiKeyIsCurrentlyUsedToCallApi = apiKeyIsValid && apiKeyIsNew == false;
+            var apiKeyIsCurrentlyUsedToCallApi = apiKeyIsValid && settingsDialogViewModel.ApiKeyValueHasBeenChanged == false;
             if (apiKeyIsCurrentlyUsedToCallApi)
                 return;
 
             await _asyncTimer.Stop();
-
-            Settings.Default.ApiKey = settingsDialogViewModel.ApiKey;
-            Settings.Default.Save();
 
             KillsSinceReset  = 0;
             DeathsSinceReset = 0;
@@ -120,9 +108,9 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             TotalDeaths      = 0;
             KillsPerIntervalLog = string.Empty; // todo weg
 
-            if (apiKeyIsValid && apiKeyIsNew) // "&& apiKeyIsNew" is not necessary but helps understanding the code.
+            if (apiKeyIsValid && settingsDialogViewModel.ApiKeyValueHasBeenChanged) // "&& apiKeyHasBeenChanged" is not necessary but helps understanding the code.
             {
-                (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(settingsDialogViewModel.ApiKey);
+                (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
                 KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
 
                 _asyncTimer.Start();
@@ -145,10 +133,10 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private async Task StartCallingApiIfApiKeyIsValid()
         {
-            if (await ApiKeyService.ApiKeyIsInvalid(Settings.Default.ApiKey))
+            if (await ApiKeyValidationService.ApiKeyIsInvalid(ApiKeyService.PersistedSelectedApiKey.Value))
                 return;
 
-            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(Settings.Default.ApiKey);
+            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
             KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
 
             _asyncTimer.Start();
@@ -173,6 +161,19 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
             return nexLogLine + log;
         }
+
+        private void InitializeCommands()
+        {
+            ResetKillsAndDeathsCommand = new RelayCommand(ResetKillsAndDeaths);
+            OpenSettingsCommand        = new RelayCommand(OpenSettingsWrapper);
+            OnWindowLoadedCommand      = new RelayCommand(OnWindowLoaded);
+            OnWindowClosingCommand     = new RelayCommand(OnWindowClosing);
+        } 
+
+        public RelayCommand OnWindowLoadedCommand { get; set; }
+        public RelayCommand ResetKillsAndDeathsCommand { get; set; }
+        public RelayCommand OpenSettingsCommand { get; set; }
+        public RelayCommand OnWindowClosingCommand { get; set; }
 
         //private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1; // todo for tests only. has to be commented in commit
         private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;

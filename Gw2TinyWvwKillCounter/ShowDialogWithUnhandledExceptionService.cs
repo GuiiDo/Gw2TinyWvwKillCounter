@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Gw2TinyWvwKillCounter.Services
+namespace Gw2TinyWvwKillCounter
 {
     public static class ShowDialogWithUnhandledExceptionService
     {

@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Gw2TinyWvwKillCounter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ApiKey" Type="System.String" Scope="User">
+    <Setting Name="SelectedApiKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="WindowTop" Type="System.Double" Scope="User">
@@ -13,6 +13,9 @@
     </Setting>
     <Setting Name="ScalingInPercent" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="ApiKeys" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

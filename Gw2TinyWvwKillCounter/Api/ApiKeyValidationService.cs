@@ -5,9 +5,9 @@ using Gw2Sharp.WebApi.Exceptions;
 using Gw2Sharp.WebApi.V2.Models;
 using Gw2TinyWvwKillCounter.ViewAndViewModels;
 
-namespace Gw2TinyWvwKillCounter.Services
+namespace Gw2TinyWvwKillCounter.Api
 {
-    public class ApiKeyService
+    public class ApiKeyValidationService
     {
         public static async Task<bool> ApiKeyIsInvalid(string apiKey)
         {

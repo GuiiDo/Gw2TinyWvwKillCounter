@@ -1,5 +1,5 @@
 ﻿using System;
-using Gw2TinyWvwKillCounter.DefaultUiStuff;
+using Gw2TinyWvwKillCounter.UiCommon;
 
 namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {

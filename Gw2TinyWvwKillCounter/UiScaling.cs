@@ -1,4 +1,6 @@
-﻿using Gw2TinyWvwKillCounter.DefaultUiStuff;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Gw2TinyWvwKillCounter.UiCommon;
 
 namespace Gw2TinyWvwKillCounter
 {
@@ -27,6 +29,15 @@ namespace Gw2TinyWvwKillCounter
                 RaisePropertyChanged(nameof(MainWindowWidth));
                 RaisePropertyChanged(nameof(MainWindowHeight));
             }
+        }
+
+        public static ObservableCollection<string> CreateValuesFrom50To500InStepsOf10()
+        {
+            var values = Enumerable.Range(5, 46)
+                                   .Select(i => i * 10)
+                                   .Select(i => i.ToString());
+
+            return new ObservableCollection<string>(values);
         }
 
         public double TooltipScaling => (double)ScalingInPercent / 100;

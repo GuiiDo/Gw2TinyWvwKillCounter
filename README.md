@@ -1,5 +1,7 @@
 # Gw2TinyWvwKillCounter
 Tiny window which shows kills and death of current WvW session ingame for Guild Wars 2.
+![screenshot](https://user-images.githubusercontent.com/43114787/128597538-ea2f9690-d240-4f04-81ba-62ba0dc4fb51.jpg)
+
 
 ## Just want to use it?
 [click here to download and use the tool](https://taschenbuch.github.io/Gw2TinyWvwKillCounter/)
