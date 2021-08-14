@@ -70,7 +70,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         {
             SaveCommand              = new RelayCommand(Save);
             CancelCommand            = new RelayCommand(Cancel);
-            OpenApiKeyWebsiteCommand = new RelayCommand(() => Process.Start("explorer.exe", "https://account.arena.net/login"));
+            OpenApiKeyWebsiteCommand = new RelayCommand(() => Process.Start("explorer.exe", "https://account.arena.net/applications"));
         }
 
         public RelayCommand SaveCommand { get; set; }
