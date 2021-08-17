@@ -46,8 +46,8 @@ namespace Gw2TinyWvwKillCounter
                                                                                         // when default width/height is changed and/or scalingInPercent has lesser step width
                                                                                         // this can become an issue.
 
-        private const uint DEFAULT_WINDOW_WIDTH = 60;
-        private const uint DEFAULT_WINDOW_HEIGHT = 50;
+        private const uint DEFAULT_WINDOW_WIDTH = 200;
+        private const uint DEFAULT_WINDOW_HEIGHT = 500;
         private uint _backupUiScalingInPercent;
     }
 }

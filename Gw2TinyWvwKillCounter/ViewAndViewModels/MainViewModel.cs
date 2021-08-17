@@ -19,6 +19,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         public UiScaling UiScaling { get; set; } = new UiScaling();
 
+        public string Test // todo weg
+        {
+            get => _test;
+            set => Set(ref _test, value);
+        }
+
         public string KillsPerIntervalLog // todo weg
         {
             get => _killsPerIntervalLog;
@@ -112,6 +118,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             {
                 (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
                 KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
+                Test = KillDeathService.Test; // todo weg
 
                 _asyncTimer.Start();
             }
@@ -138,6 +145,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
             (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
             KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
+            Test = KillDeathService.Test; // todo weg
+
 
             _asyncTimer.Start();
         }
@@ -146,6 +155,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         {
             (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeaths();
             KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
+            Test = KillDeathService.Test; // todo weg
         }
 
         private string AddLogLineAndTruncateLogIfItGetsTooLong(string log) // todo weg
@@ -157,8 +167,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
                 log = string.Join('\n', logLines);
             }
 
-            //var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n"; // todo for tests only. has to be commented in commit
-            var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
+            var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n"; // todo for tests only. has to be commented in commit
+            //var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
             return nexLogLine + log;
         }
 
@@ -187,5 +197,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private string _killsPerIntervalLog = string.Empty;
         private string _totalKillsTooltip;
         private string _totalDeathsTooltip;
+        private string _test;
     }
 }
