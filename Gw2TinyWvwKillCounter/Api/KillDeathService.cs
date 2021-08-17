@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Gw2Sharp;
 using Gw2Sharp.WebApi.Exceptions;
+using Gw2Sharp.WebApi.Http;
 
 namespace Gw2TinyWvwKillCounter.Api
 {
@@ -29,10 +31,11 @@ namespace Gw2TinyWvwKillCounter.Api
             {
                 (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
             }
-            catch (UnexpectedStatusException)
+            catch (Exception)
             {
-                // intentionally no catch code!
-                // when api server does not respond (error code 500, 502). the app will just return the previous kill/death values and hope that on the end of the next interval
+                // intentionally no error handling!
+                // when api server does not respond (error code 500, 502) or times out (RequestCanceledException)
+                // the app will just return the previous kill/death values and hope that on the end of the next interval
                 // the api server will answer correctly again.
                 // todo Problem: this catches every exception from gw2sharp. so this may hide crashes that should be caught and handled in a different way.
                 // todo e.g. TooManyRequestsException (when other tools use the same api key?), BadRequestException (api key deleted on gw2 website?),
