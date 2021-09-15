@@ -185,8 +185,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public RelayCommand OpenSettingsCommand { get; set; }
         public RelayCommand OnWindowClosingCommand { get; set; }
 
-        //private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1; // todo for tests only. has to be commented in commit
-        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
+        private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 1; // todo for tests only. has to be commented in commit
+        //private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
         private int _killsSinceReset;

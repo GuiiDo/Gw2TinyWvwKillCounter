@@ -47,7 +47,7 @@ namespace Gw2TinyWvwKillCounter
                                                                                         // this can become an issue.
 
         private const uint DEFAULT_WINDOW_WIDTH = 200;
-        private const uint DEFAULT_WINDOW_HEIGHT = 500;
+        private const uint DEFAULT_WINDOW_HEIGHT = 210;
         private uint _backupUiScalingInPercent;
     }
 }

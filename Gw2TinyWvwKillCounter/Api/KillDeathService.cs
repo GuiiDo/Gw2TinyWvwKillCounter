@@ -5,6 +5,7 @@ using Gw2Sharp;
 using Gw2Sharp.WebApi.Exceptions;
 using Gw2TinyWvwKillCounter.LogFile;
 using Gw2Sharp.WebApi.Http;
+using Gw2Sharp.WebApi.V2.Models;
 
 namespace Gw2TinyWvwKillCounter.Api
 {
@@ -14,7 +15,7 @@ namespace Gw2TinyWvwKillCounter.Api
         {
             _gw2Client = new Gw2Client(new Connection(apiKey));
 
-            (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
+            (_wvw, _totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
             ResetKillsAndDeaths();
 
             return (_totalKills, _totalDeaths);
@@ -30,7 +31,42 @@ namespace Gw2TinyWvwKillCounter.Api
         {
             try
             {
-                (_totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
+                WvwMatchStats wvw;
+                (wvw, _totalKills, _totalDeaths) = await GetTotalKillsAndDeaths(_gw2Client);
+
+                try // todo weg
+                {
+                    Test = $"{DateTime.Now:HH:mm:ss}\n" +
+                           $"red\n" +
+                           $"t   {wvw.Kills.Red - _wvw.Kills.Red} {wvw.Deaths.Red - _wvw.Deaths.Red} " +
+                           $"{(float)(wvw.Kills.Red - _wvw.Kills.Red) / (wvw.Deaths.Red - _wvw.Deaths.Red):0.00} {(float)wvw.Kills.Red / wvw.Deaths.Red:0.00} \n" +
+                           //$"ebg {wvw.Maps[0].Kills.Red} {wvw.Maps[0].Deaths.Red} {(float)wvw.Maps[0].Kills.Red / wvw.Maps[0].Deaths.Red:0.00} \n" +
+                           //$"rbl {wvw.Maps[1].Kills.Red} {wvw.Maps[1].Deaths.Red} {(float)wvw.Maps[1].Kills.Red / wvw.Maps[1].Deaths.Red:0.00} \n" +
+                           //$"bbl {wvw.Maps[2].Kills.Red} {wvw.Maps[2].Deaths.Red} {(float)wvw.Maps[2].Kills.Red / wvw.Maps[2].Deaths.Red:0.00} \n" +
+                           //$"gbl {wvw.Maps[3].Kills.Red} {wvw.Maps[3].Deaths.Red} {(float)wvw.Maps[3].Kills.Red / wvw.Maps[3].Deaths.Red:0.00} \n\n" +
+                           $"blue\n" +
+                           $"t   {wvw.Kills.Blue - _wvw.Kills.Blue} {wvw.Deaths.Blue - _wvw.Deaths.Blue} " +
+                           $"{(float)(wvw.Kills.Blue - _wvw.Kills.Blue) / (wvw.Deaths.Blue - _wvw.Deaths.Blue):0.00} {(float)wvw.Kills.Blue / wvw.Deaths.Blue:0.00} \n" +
+                           //$"ebg {wvw.Maps[0].Kills.Blue} {wvw.Maps[0].Deaths.Blue} {(float)wvw.Maps[0].Kills.Blue / wvw.Maps[0].Deaths.Blue:0.00} \n" +
+                           //$"rbl {wvw.Maps[1].Kills.Blue} {wvw.Maps[1].Deaths.Blue} {(float)wvw.Maps[1].Kills.Blue / wvw.Maps[1].Deaths.Blue:0.00} \n" +
+                           //$"bbl {wvw.Maps[2].Kills.Blue} {wvw.Maps[2].Deaths.Blue} {(float)wvw.Maps[2].Kills.Blue / wvw.Maps[2].Deaths.Blue:0.00} \n" +
+                           //$"gbl {wvw.Maps[3].Kills.Blue} {wvw.Maps[3].Deaths.Blue} {(float)wvw.Maps[3].Kills.Blue / wvw.Maps[3].Deaths.Blue:0.00} \n\n" +
+                           $"green\n" +
+                           $"t   {wvw.Kills.Green - _wvw.Kills.Green} {wvw.Deaths.Green - _wvw.Deaths.Green} " +
+                           $"{(float)(wvw.Kills.Green - _wvw.Kills.Green) / (wvw.Deaths.Green - _wvw.Deaths.Green):0.00} {(float)wvw.Kills.Green / wvw.Deaths.Green:0.00} \n" 
+                           //$"ebg {wvw.Maps[0].Kills.Green} {wvw.Maps[0].Deaths.Green} {(float)wvw.Maps[0].Kills.Green / wvw.Maps[0].Deaths.Green:0.00} \n" +
+                           //$"rbl {wvw.Maps[1].Kills.Green} {wvw.Maps[1].Deaths.Green} {(float)wvw.Maps[1].Kills.Green / wvw.Maps[1].Deaths.Green:0.00} \n" +
+                           //$"bbl {wvw.Maps[2].Kills.Green} {wvw.Maps[2].Deaths.Green} {(float)wvw.Maps[2].Kills.Green / wvw.Maps[2].Deaths.Green:0.00} \n" +
+                           //$"gbl {wvw.Maps[3].Kills.Green} {wvw.Maps[3].Deaths.Green} {(float)wvw.Maps[3].Kills.Green / wvw.Maps[3].Deaths.Green:0.00} \n "
+                           ;
+
+                    LogToFile.Info(Test);
+
+                }
+                catch (Exception)
+                {
+                    // catch divide zero. too lazy to write code for that now. 
+                }
 
                 //var fakeWebApiRequest = new WebApiRequest(new Uri("https://www.google.com/"), new Connection(), new Gw2Client()); // todo weg
                 //throw new NotFoundException(fakeWebApiRequest, new WebApiResponse<ErrorObject>(new ErrorObject(), new CacheState())); // todo weg
@@ -53,7 +89,7 @@ namespace Gw2TinyWvwKillCounter.Api
             return (killsSinceReset, deathsSinceReset, _totalKills, _totalDeaths);
         }
 
-        private static async Task<(int totalKills, int totalDeaths)> GetTotalKillsAndDeaths(Gw2Client gw2Client)
+        private static async Task<(WvwMatchStats wvw, int totalKills, int totalDeaths)> GetTotalKillsAndDeaths(Gw2Client gw2Client)
         {
             var charactersTask   = gw2Client.WebApi.V2.Characters.AllAsync();
             var achievementsTask = gw2Client.WebApi.V2.Account.Achievements.GetAsync();
@@ -66,37 +102,7 @@ namespace Gw2TinyWvwKillCounter.Api
             var totalDeaths  = characters.Sum(c => c.Deaths);
             var totalKills   = achievements.Single(a => a.Id == REALM_AVENGER_ACHIEVEMENT_ID).Current;
 
-            try // todo weg
-            {
-                Test = $"{DateTime.Now:HH:mm:ss}\n" +
-                       $"red\n" +
-                       $"t   {wvw.Kills.Red} {wvw.Deaths.Red} {(float) wvw.Kills.Red / wvw.Deaths.Red:0.00}\n" + // todo weg
-                       $"ebg {wvw.Maps[0].Kills.Red} {wvw.Maps[0].Deaths.Red} {(float) wvw.Maps[0].Kills.Red / wvw.Maps[0].Deaths.Red:0.00} \n" +
-                       $"rbl {wvw.Maps[1].Kills.Red} {wvw.Maps[1].Deaths.Red} {(float) wvw.Maps[1].Kills.Red / wvw.Maps[1].Deaths.Red:0.00} \n" +
-                       $"bbl {wvw.Maps[2].Kills.Red} {wvw.Maps[2].Deaths.Red} {(float) wvw.Maps[2].Kills.Red / wvw.Maps[2].Deaths.Red:0.00} \n" +
-                       $"gbl {wvw.Maps[3].Kills.Red} {wvw.Maps[3].Deaths.Red} {(float) wvw.Maps[3].Kills.Red / wvw.Maps[3].Deaths.Red:0.00} \n\n" +
-                       $"blue\n" +
-                       $"t   {wvw.Kills.Blue} {wvw.Deaths.Blue} {(float) wvw.Kills.Blue / wvw.Deaths.Blue:0.00} \n" +
-                       $"ebg {wvw.Maps[0].Kills.Blue} {wvw.Maps[0].Deaths.Blue} {(float) wvw.Maps[0].Kills.Blue / wvw.Maps[0].Deaths.Blue:0.00} \n" +
-                       $"rbl {wvw.Maps[1].Kills.Blue} {wvw.Maps[1].Deaths.Blue} {(float) wvw.Maps[1].Kills.Blue / wvw.Maps[1].Deaths.Blue:0.00} \n" +
-                       $"bbl {wvw.Maps[2].Kills.Blue} {wvw.Maps[2].Deaths.Blue} {(float) wvw.Maps[2].Kills.Blue / wvw.Maps[2].Deaths.Blue:0.00} \n" +
-                       $"gbl {wvw.Maps[3].Kills.Blue} {wvw.Maps[3].Deaths.Blue} {(float) wvw.Maps[3].Kills.Blue / wvw.Maps[3].Deaths.Blue:0.00} \n\n" +
-                       $"green\n" +
-                       $"t   {wvw.Kills.Green} {wvw.Deaths.Green} {(float) wvw.Kills.Green / wvw.Deaths.Green:0.00} \n" +
-                       $"ebg {wvw.Maps[0].Kills.Green} {wvw.Maps[0].Deaths.Green} {(float) wvw.Maps[0].Kills.Green / wvw.Maps[0].Deaths.Green:0.00} \n" +
-                       $"rbl {wvw.Maps[1].Kills.Green} {wvw.Maps[1].Deaths.Green} {(float) wvw.Maps[1].Kills.Green / wvw.Maps[1].Deaths.Green:0.00} \n" +
-                       $"bbl {wvw.Maps[2].Kills.Green} {wvw.Maps[2].Deaths.Green} {(float) wvw.Maps[2].Kills.Green / wvw.Maps[2].Deaths.Green:0.00} \n" +
-                       $"gbl {wvw.Maps[3].Kills.Green} {wvw.Maps[3].Deaths.Green} {(float) wvw.Maps[3].Kills.Green / wvw.Maps[3].Deaths.Green:0.00} \n ";
-
-                LogToFile.Info(Test);
-
-            }
-            catch (Exception)
-            {
-                // catch divide zero. too lazy to write code for that now. 
-            }
-
-            return (totalKills, totalDeaths);
+            return (wvw, totalKills, totalDeaths);
         }
 
         public static string Test { get; set; } = string.Empty; // todo weg
@@ -106,6 +112,7 @@ namespace Gw2TinyWvwKillCounter.Api
         private int _totalKillsAtReset;
         private int _totalDeathsAtReset;
         private Gw2Client _gw2Client;
+        private WvwMatchStats _wvw; // todo weg
         private const int REALM_AVENGER_ACHIEVEMENT_ID = 283;
     }
 }
