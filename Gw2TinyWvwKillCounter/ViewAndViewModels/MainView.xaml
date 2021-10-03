@@ -33,8 +33,8 @@
                                 Background="{TemplateBinding Background}"
                                 SnapsToDevicePixels="True">
                             <Border.LayoutTransform>
-                                <ScaleTransform ScaleX="{Binding UiScaling.TooltipScaling}"
-                                                ScaleY="{Binding UiScaling.TooltipScaling}" />
+                                <ScaleTransform ScaleX="{Binding UiSettings.TooltipScaling}"
+                                                ScaleY="{Binding UiSettings.TooltipScaling}" />
                             </Border.LayoutTransform>
                             <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
                                               Content="{TemplateBinding Content}"
@@ -63,13 +63,13 @@
             <b:InvokeCommandAction Command="{Binding OnWindowClosingCommand}" />
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <Viewbox Stretch="Uniform" Height="{Binding UiScaling.MainWindowHeight}" Width="{Binding UiScaling.MainWindowWidth}">
+    <Viewbox Stretch="Uniform" Height="{Binding UiSettings.MainWindowHeight}" Width="{Binding UiSettings.MainWindowWidth}">
         <StackPanel Orientation="Vertical">
             <!--Buttons-->
             <StackPanel Orientation="Horizontal"
                         Visibility="{Binding TitleBarButtonsAreVisible, Converter={StaticResource BoolToVisibilityHiddenIfFalseConverter}}">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <Button Command="{Binding ResetKillsAndDeathsCommand}"
                         IsEnabled="{Binding ResetButtonIsEnabled}"
@@ -111,7 +111,7 @@
             <!--Kills-->
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="K"
                            ToolTip="{Binding TotalKillsTooltip}"
@@ -125,7 +125,7 @@
             <!--Deaths-->
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="D"
                            ToolTip="{Binding TotalDeathsTooltip}"

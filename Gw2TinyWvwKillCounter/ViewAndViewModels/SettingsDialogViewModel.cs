@@ -9,12 +9,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {
     public class SettingsDialogViewModel : PropertyChangedBase
     {
-        public SettingsDialogViewModel(UiScaling uiScaling, Action closeWindow)
+        public SettingsDialogViewModel(UiSettings uiSettings, Action closeWindow)
         {
             InitializeCommands();
 
-            uiScaling.BackupUiScaling();
-            UiScaling    = uiScaling;
+            uiSettings.BackupUiSettings();
+            UiSettings    = uiSettings;
             _closeWindow = closeWindow;
 
             var apiKeys = ApiKeyService.PersistedApiKeys;
@@ -46,22 +46,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public bool ApiKeyValueHasBeenChanged { get; set; }
         public ObservableCollection<ApiKey> ApiKeys { get; } = new ObservableCollection<ApiKey>();
         public bool ApiKeysComboBoxAndDeleteButtonAreVisible => ApiKeys.Any();
-        public UiScaling UiScaling { get; }
-        public ObservableCollection<string> UiScalingInPercentSelectableValues { get; set; } = UiScaling.CreateValuesFrom50To500InStepsOf10();
-        public ObservableCollection<string> UiOpacityInPercentSelectableValues { get; set; } = UiScaling.CreateValuesFrom0To100InStepsOf10();
-
-        public string UiScalingInPercent
-        {
-            get => UiScaling.ScalingInPercent.ToString();
-            set => UiScaling.ScalingInPercent = uint.Parse(value);
-        }
-
-        public string UiOpacityInPercent
-        {
-            get => UiScaling.OpacityInPercent.ToString();
-            set => UiScaling.OpacityInPercent = uint.Parse(value);
-        }
-
+        public UiSettings UiSettings { get; }
         public DialogResult DialogResult { get; set; } = DialogResult.Cancel;
 
         private void AddApiKey()
@@ -70,7 +55,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             var apiKeyNames = ApiKeys.Select(a => a.Name).ToList();
 
             var addApiKeyDialogView      = new AddApiKeyDialogView();
-            var addApiKeyDialogViewModel = new AddApiKeyDialogViewModel(newApiKey, apiKeyNames, UiScaling, () => addApiKeyDialogView.Close());
+            var addApiKeyDialogViewModel = new AddApiKeyDialogViewModel(newApiKey, apiKeyNames, UiSettings, () => addApiKeyDialogView.Close());
             addApiKeyDialogView.DataContext = addApiKeyDialogViewModel;
             addApiKeyDialogView.ShowDialog();
 
@@ -102,7 +87,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private void Cancel()
         {
-            UiScaling.RestoreUiScaling();
+            UiSettings.RestoreUiSettings();
             DialogResult = DialogResult.Cancel;
             _closeWindow();
         }

@@ -29,8 +29,8 @@
                                 Background="{TemplateBinding Background}"
                                 SnapsToDevicePixels="True">
                             <Border.LayoutTransform>
-                                <ScaleTransform ScaleX="{Binding UiScaling.TooltipScaling}"
-                                                ScaleY="{Binding UiScaling.TooltipScaling}" />
+                                <ScaleTransform ScaleX="{Binding UiSettings.TooltipScaling}"
+                                                ScaleY="{Binding UiSettings.TooltipScaling}" />
                             </Border.LayoutTransform>
                             <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
                                               Content="{TemplateBinding Content}"
@@ -58,8 +58,8 @@
                        Foreground="LightGray"
                        Margin="0 0 0 0" />
             <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedValue="{Binding UiScalingInPercent}"
-                          ItemsSource="{Binding UiScalingInPercentSelectableValues}"
+                <ComboBox SelectedValue="{Binding UiSettings.UiScalingInPercent}"
+                          ItemsSource="{Binding UiSettings.UiScalingInPercentSelectableValues}"
                           ToolTip="Change to scale main window"
                           FontSize="20"
                           MinWidth="80" />
@@ -80,8 +80,8 @@
                        Foreground="LightGray"
                        Margin="0 0 0 0" />
             <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedValue="{Binding UiOpacityInPercent}"
-                          ItemsSource="{Binding UiOpacityInPercentSelectableValues}"
+                <ComboBox SelectedValue="{Binding UiSettings.UiOpacityInPercent}"
+                          ItemsSource="{Binding UiSettings.UiOpacityInPercentSelectableValues}"
                           ToolTip="Change opacity of main window"
                           FontSize="20"
                           MinWidth="80" />

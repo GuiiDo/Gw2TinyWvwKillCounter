@@ -29,8 +29,8 @@
                                 Background="{TemplateBinding Background}"
                                 SnapsToDevicePixels="True">
                             <Border.LayoutTransform>
-                                <ScaleTransform ScaleX="{Binding UiScaling.TooltipScaling}"
-                                                ScaleY="{Binding UiScaling.TooltipScaling}" />
+                                <ScaleTransform ScaleX="{Binding UiSettings.TooltipScaling}"
+                                                ScaleY="{Binding UiSettings.TooltipScaling}" />
                             </Border.LayoutTransform>
                             <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
                                               Content="{TemplateBinding Content}"

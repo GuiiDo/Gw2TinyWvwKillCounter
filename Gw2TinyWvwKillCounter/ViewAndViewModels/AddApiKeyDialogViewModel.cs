@@ -9,13 +9,13 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 {
     public class AddApiKeyDialogViewModel : PropertyChangedBase
     {
-        public AddApiKeyDialogViewModel(ApiKey apiKey, List<string> apiKeyNames, UiScaling uiScaling, Action closeWindow)
+        public AddApiKeyDialogViewModel(ApiKey apiKey, List<string> apiKeyNames, UiSettings uiSettings, Action closeWindow)
         {
             InitializeCommands();
 
             _apiKey = apiKey;
             _apiKeyNames = apiKeyNames;
-            UiScaling    = uiScaling;
+            UiSettings    = uiSettings;
             _closeWindow = closeWindow;
 
         }
@@ -32,7 +32,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             set => _apiKey.Value = _invalidApiKeyCharacters.Replace(value, "");
         }
 
-        public UiScaling UiScaling { get; }
+        public UiSettings UiSettings { get; }
         public DialogResult DialogResult { get; set; } = DialogResult.Cancel;
 
         private void Cancel()

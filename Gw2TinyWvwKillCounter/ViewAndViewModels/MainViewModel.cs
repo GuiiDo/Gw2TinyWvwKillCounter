@@ -17,7 +17,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
 
-        public UiScaling UiScaling { get; set; } = new UiScaling();
+        public UiSettings UiSettings { get; set; } = new UiSettings();
 
         public string KillsPerIntervalLog // todo weg
         {
@@ -87,7 +87,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private async Task OpenSettings()
         {
             var settingsDialogView      = new SettingsDialogView();
-            var settingsDialogViewModel = new SettingsDialogViewModel(UiScaling, () => settingsDialogView.Close());
+            var settingsDialogViewModel = new SettingsDialogViewModel(UiSettings, () => settingsDialogView.Close());
             settingsDialogView.DataContext = settingsDialogViewModel;
             settingsDialogView.ShowDialog();
 
