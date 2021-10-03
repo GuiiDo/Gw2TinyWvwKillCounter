@@ -82,5 +82,17 @@ namespace Gw2TinyWvwKillCounter.Properties {
                 this["ApiKeys"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public uint OpacityInPercent {
+            get {
+                return ((uint)(this["OpacityInPercent"]));
+            }
+            set {
+                this["OpacityInPercent"] = value;
+            }
+        }
     }
 }

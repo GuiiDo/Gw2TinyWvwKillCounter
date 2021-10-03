@@ -69,7 +69,7 @@
             <StackPanel Orientation="Horizontal"
                         Visibility="{Binding TitleBarButtonsAreVisible, Converter={StaticResource BoolToVisibilityHiddenIfFalseConverter}}">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <Button Command="{Binding ResetKillsAndDeathsCommand}"
                         IsEnabled="{Binding ResetButtonIsEnabled}"
@@ -111,7 +111,7 @@
             <!--Kills-->
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="K"
                            ToolTip="{Binding TotalKillsTooltip}"
@@ -125,7 +125,7 @@
             <!--Deaths-->
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                    <SolidColorBrush Color="Black" Opacity="{Binding UiScaling.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="D"
                            ToolTip="{Binding TotalDeathsTooltip}"

@@ -48,11 +48,18 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         public bool ApiKeysComboBoxAndDeleteButtonAreVisible => ApiKeys.Any();
         public UiScaling UiScaling { get; }
         public ObservableCollection<string> UiScalingInPercentSelectableValues { get; set; } = UiScaling.CreateValuesFrom50To500InStepsOf10();
+        public ObservableCollection<string> UiOpacityInPercentSelectableValues { get; set; } = UiScaling.CreateValuesFrom0To100InStepsOf10();
 
         public string UiScalingInPercent
         {
             get => UiScaling.ScalingInPercent.ToString();
             set => UiScaling.ScalingInPercent = uint.Parse(value);
+        }
+
+        public string UiOpacityInPercent
+        {
+            get => UiScaling.OpacityInPercent.ToString();
+            set => UiScaling.OpacityInPercent = uint.Parse(value);
         }
 
         public DialogResult DialogResult { get; set; } = DialogResult.Cancel;

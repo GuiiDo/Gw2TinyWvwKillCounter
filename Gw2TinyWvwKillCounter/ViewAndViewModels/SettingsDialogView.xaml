@@ -69,6 +69,28 @@
                            Margin="5 0 0 0"
                            VerticalAlignment="Center" />
             </StackPanel>
+            <!--ui opacity-->
+            <TextBlock Text="UI opacity"
+                       FontWeight="Bold"
+                       FontSize="20"
+                       Foreground="LightGray" 
+                       Margin="0 20 0 0" />
+            <TextBlock Text="Change main window opacity (0% = transparent, 100% = opaque)."
+                       FontSize="20"
+                       Foreground="LightGray"
+                       Margin="0 0 0 0" />
+            <StackPanel Orientation="Horizontal">
+                <ComboBox SelectedValue="{Binding UiOpacityInPercent}"
+                          ItemsSource="{Binding UiOpacityInPercentSelectableValues}"
+                          ToolTip="Change opacity of main window"
+                          FontSize="20"
+                          MinWidth="80" />
+                <TextBlock Text="%"
+                           FontSize="20"
+                           Foreground="LightGray"
+                           Margin="5 0 0 0"
+                           VerticalAlignment="Center" />
+            </StackPanel>
             <!--api key-->
             <TextBlock Text="API key"
                        FontSize="20"
