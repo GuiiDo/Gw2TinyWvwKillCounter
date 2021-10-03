@@ -148,6 +148,12 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
         }
 
+        public bool TitleBarButtonsAreVisible
+        {
+            get => _titleBarButtonsAreVisible;
+            set => Set(ref _titleBarButtonsAreVisible, value);
+        }
+
         private string AddLogLineAndTruncateLogIfItGetsTooLong(string log) // todo weg
         {
             var logLines = _killsPerIntervalLog.Split('\n').ToList();
@@ -167,10 +173,14 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             ResetKillsAndDeathsCommand = new RelayCommand(ResetKillsAndDeaths);
             OpenSettingsCommand        = new RelayCommand(OpenSettingsWrapper);
             OnWindowLoadedCommand      = new RelayCommand(OnWindowLoaded);
+            OnMouseEnterCommand        = new RelayCommand(() => TitleBarButtonsAreVisible = true);
+            OnMouseLeaveCommand        = new RelayCommand(() => TitleBarButtonsAreVisible = false);
             OnWindowClosingCommand     = new RelayCommand(OnWindowClosing);
-        } 
+        }
 
         public RelayCommand OnWindowLoadedCommand { get; set; }
+        public RelayCommand OnMouseEnterCommand { get; set; }
+        public RelayCommand OnMouseLeaveCommand { get; set; }
         public RelayCommand ResetKillsAndDeathsCommand { get; set; }
         public RelayCommand OpenSettingsCommand { get; set; }
         public RelayCommand OnWindowClosingCommand { get; set; }
@@ -187,5 +197,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private string _killsPerIntervalLog = string.Empty;
         private string _totalKillsTooltip;
         private string _totalDeathsTooltip;
+        private bool _titleBarButtonsAreVisible;
     }
 }

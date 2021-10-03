@@ -7,6 +7,7 @@
         xmlns:settings="clr-namespace:Gw2TinyWvwKillCounter.Properties"
         xmlns:viewAndViewModels="clr-namespace:Gw2TinyWvwKillCounter.ViewAndViewModels"
         xmlns:icon="clr-namespace:Gw2TinyWvwKillCounter.Icon"
+        xmlns:gw2TinyWvwKillCounter="clr-namespace:Gw2TinyWvwKillCounter"
         mc:Ignorable="d"
         Top="{Binding WindowTop, Source={x:Static settings:Settings.Default}, Mode=TwoWay}"
         Left="{Binding WindowLeft, Source={x:Static settings:Settings.Default}, Mode=TwoWay}"
@@ -17,9 +18,10 @@
         Title="GW2 Tiny WvW Kill Counter"
         d:DataContext="{d:DesignInstance Type=viewAndViewModels:MainViewModel, IsDesignTimeCreatable=true}">
     <Window.Background>
-        <SolidColorBrush Color="Black" Opacity="0.5" />
+        <SolidColorBrush Color="Transparent"/>
     </Window.Background>
     <Window.Resources>
+        <gw2TinyWvwKillCounter:BoolToVisibilityHiddenIfFalseConverter x:Key="BoolToVisibilityHiddenIfFalseConverter"/>
         <Style TargetType="ToolTip">
             <!-- for scaling tooltips size -->
             <Setter Property="Template">
@@ -48,6 +50,12 @@
         </Style>
     </Window.Resources>
     <b:Interaction.Triggers>
+        <b:EventTrigger EventName="MouseEnter">
+            <b:InvokeCommandAction Command="{Binding OnMouseEnterCommand}" />
+        </b:EventTrigger>
+        <b:EventTrigger EventName="MouseLeave">
+            <b:InvokeCommandAction Command="{Binding OnMouseLeaveCommand}" />
+        </b:EventTrigger>
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding OnWindowLoadedCommand}" />
         </b:EventTrigger>
@@ -58,7 +66,11 @@
     <Viewbox Stretch="Uniform" Height="{Binding UiScaling.MainWindowHeight}" Width="{Binding UiScaling.MainWindowWidth}">
         <StackPanel Orientation="Vertical">
             <!--Buttons-->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding TitleBarButtonsAreVisible, Converter={StaticResource BoolToVisibilityHiddenIfFalseConverter}}">
+                <StackPanel.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                </StackPanel.Background>
                 <Button Command="{Binding ResetKillsAndDeathsCommand}"
                         IsEnabled="{Binding ResetButtonIsEnabled}"
                         ToolTip="Reset kills and deaths to 0"
@@ -98,6 +110,9 @@
             </StackPanel>
             <!--Kills-->
             <StackPanel Orientation="Horizontal">
+                <StackPanel.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                </StackPanel.Background>
                 <TextBlock Text="K"
                            ToolTip="{Binding TotalKillsTooltip}"
                            Margin="2 0 0 0"
@@ -109,6 +124,9 @@
             </StackPanel>
             <!--Deaths-->
             <StackPanel Orientation="Horizontal">
+                <StackPanel.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                </StackPanel.Background>
                 <TextBlock Text="D"
                            ToolTip="{Binding TotalDeathsTooltip}"
                            Margin="2 0 0 0"
