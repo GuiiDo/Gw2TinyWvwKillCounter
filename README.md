@@ -7,6 +7,19 @@ Tiny window which shows kills and death of current WvW session ingame for Guild 
 
 [click here to download (under construction)](https://taschenbuch.github.io/Gw2TinyWvwKillCounter/)
 
+- double click on Gw2TinyWvwKillCounter.exe to start it. The tool should appear on the top left of your screen.
+ - If a windows warning appears. close it. rightclick on the exe -> settings -> General tab -> Security: tick the "allow" checkbox
+ - It is a tiny window, you may miss it at first
+ - requirement: gw2 in windowed fullscreen or Window mode
+- click gear-icon and then plus-icon to enter one or more api keys
+ - api key permissions: account, characters, progression
+ - you can create an api key here https://account.arena.net/applications -> applications tab -> new key -> check Account, Characters, Progression
+- confirm dialog
+- Kills/deaths counters are updated roughly every 5+ minutes. There can be bigger delays of 15-20 minutes. Gw2 api updates the data really slow and the data can be outdated too
+- optional: click 0-icon to reset kills/death counter to 0 again
+
+
+
 ## For developers
 
 ### General
