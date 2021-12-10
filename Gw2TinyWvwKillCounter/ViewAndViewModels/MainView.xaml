@@ -113,6 +113,16 @@
                 <StackPanel.Background>
                     <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
+                <Button Command="{Binding StartBuffReminderCommand}"
+                        ToolTip="Test food reminder"
+                        Background="Transparent"
+                        BorderThickness="0">
+                    <Viewbox Width="17" Height="17">
+                        <Canvas Width="24" Height="24">
+                            <Path Fill="LightGray" Data="{x:Static icon:Icons.Setting}" />
+                        </Canvas>
+                    </Viewbox>
+                </Button>
                 <TextBlock Text="K"
                            ToolTip="{Binding TotalKillsTooltip}"
                            Margin="2 0 0 0"

@@ -13,7 +13,6 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         {
             ShowDialogWithUnhandledExceptionService.InitializeExceptionHandling();
             InitializeCommands();
-
             _asyncTimer.IntervalEnded  += OnAsyncTimerIntervalEnded;
         }
 
@@ -154,6 +153,11 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             set => Set(ref _titleBarButtonsAreVisible, value);
         }
 
+        private void StartBuffReminder()
+        {
+            new System.Media.SoundPlayer(Resources.tada_windows_sound_wav).Play();
+        }
+
         private string AddLogLineAndTruncateLogIfItGetsTooLong(string log) // todo weg
         {
             var logLines = _killsPerIntervalLog.Split('\n').ToList();
@@ -170,6 +174,7 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private void InitializeCommands()
         {
+            StartBuffReminderCommand   = new RelayCommand(StartBuffReminder);
             ResetKillsAndDeathsCommand = new RelayCommand(ResetKillsAndDeaths);
             OpenSettingsCommand        = new RelayCommand(OpenSettingsWrapper);
             OnWindowLoadedCommand      = new RelayCommand(OnWindowLoaded);
@@ -177,7 +182,8 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             OnMouseLeaveCommand        = new RelayCommand(() => TitleBarButtonsAreVisible = false);
             OnWindowClosingCommand     = new RelayCommand(OnWindowClosing);
         }
-
+        
+        public RelayCommand StartBuffReminderCommand { get; set; }
         public RelayCommand OnWindowLoadedCommand { get; set; }
         public RelayCommand OnMouseEnterCommand { get; set; }
         public RelayCommand OnMouseLeaveCommand { get; set; }
