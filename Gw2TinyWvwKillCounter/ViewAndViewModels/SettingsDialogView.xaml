@@ -48,49 +48,6 @@
     <Border BorderBrush="Bisque" BorderThickness="2">
         <StackPanel Orientation="Vertical"
                     Margin="10">
-            <!--ui scaling-->
-            <TextBlock Text="UI scaling"
-                       FontWeight="Bold"
-                       FontSize="20"
-                       Foreground="LightGray" />
-            <TextBlock Text="Scale main window for better visibility."
-                       FontSize="20"
-                       Foreground="LightGray"
-                       Margin="0 0 0 0" />
-            <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedValue="{Binding UiSettings.UiScalingInPercent}"
-                          ItemsSource="{Binding UiSettings.UiScalingInPercentSelectableValues}"
-                          ToolTip="Change to scale main window"
-                          FontSize="20"
-                          MinWidth="80" />
-                <TextBlock Text="%"
-                           FontSize="20"
-                           Foreground="LightGray"
-                           Margin="5 0 0 0"
-                           VerticalAlignment="Center" />
-            </StackPanel>
-            <!--ui opacity-->
-            <TextBlock Text="UI opacity"
-                       FontWeight="Bold"
-                       FontSize="20"
-                       Foreground="LightGray" 
-                       Margin="0 20 0 0" />
-            <TextBlock Text="Change main window opacity (0% = transparent, 100% = opaque)."
-                       FontSize="20"
-                       Foreground="LightGray"
-                       Margin="0 0 0 0" />
-            <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedValue="{Binding UiSettings.UiOpacityInPercent}"
-                          ItemsSource="{Binding UiSettings.UiOpacityInPercentSelectableValues}"
-                          ToolTip="Change opacity of main window"
-                          FontSize="20"
-                          MinWidth="80" />
-                <TextBlock Text="%"
-                           FontSize="20"
-                           Foreground="LightGray"
-                           Margin="5 0 0 0"
-                           VerticalAlignment="Center" />
-            </StackPanel>
             <!--api key-->
             <TextBlock Text="API key"
                        FontSize="20"
@@ -143,7 +100,50 @@
                        FontSize="20"
                        Foreground="LightGray"
                        VerticalAlignment="Center"
+                       Margin="0 0 0 20" />
+            <!--ui scaling-->
+            <TextBlock Text="UI scaling"
+                       FontWeight="Bold"
+                       FontSize="20"
+                       Foreground="LightGray" />
+            <TextBlock Text="Scale main window for better visibility."
+                       FontSize="20"
+                       Foreground="LightGray"
                        Margin="0 0 0 0" />
+            <StackPanel Orientation="Horizontal">
+                <ComboBox SelectedValue="{Binding UiSettings.UiScalingInPercent}"
+                          ItemsSource="{Binding UiSettings.UiScalingInPercentSelectableValues}"
+                          ToolTip="Change to scale main window"
+                          FontSize="20"
+                          MinWidth="80" />
+                <TextBlock Text="%"
+                           FontSize="20"
+                           Foreground="LightGray"
+                           Margin="5 0 0 0"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+            <!--ui opacity-->
+            <TextBlock Text="UI opacity"
+                       FontWeight="Bold"
+                       FontSize="20"
+                       Foreground="LightGray" 
+                       Margin="0 20 0 0" />
+            <TextBlock Text="Change main window opacity (0% = transparent, 100% = opaque)."
+                       FontSize="20"
+                       Foreground="LightGray"
+                       Margin="0 0 0 0" />
+            <StackPanel Orientation="Horizontal">
+                <ComboBox SelectedValue="{Binding UiSettings.UiOpacityInPercent}"
+                          ItemsSource="{Binding UiSettings.UiOpacityInPercentSelectableValues}"
+                          ToolTip="Change opacity of main window"
+                          FontSize="20"
+                          MinWidth="80" />
+                <TextBlock Text="%"
+                           FontSize="20"
+                           Foreground="LightGray"
+                           Margin="5 0 0 0"
+                           VerticalAlignment="Center" />
+            </StackPanel>
             <StackPanel Orientation="Horizontal"
                         Margin="0 20 0 0">
                 <!--ok-->
