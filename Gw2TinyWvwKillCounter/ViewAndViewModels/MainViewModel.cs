@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Gw2TinyWvwKillCounter.Api;
 using Gw2TinyWvwKillCounter.Properties;
@@ -19,42 +18,16 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         public UiSettings UiSettings { get; set; } = new UiSettings();
 
-        public string KillsPerIntervalLog // todo weg
+        public bool TitleBarButtonsAreVisible
         {
-            get => _killsPerIntervalLog;
-            set => Set(ref _killsPerIntervalLog, value);
+            get => _titleBarButtonsAreVisible;
+            set => Set(ref _titleBarButtonsAreVisible, value);
         }
 
-        public string TotalKillsTooltip
+        public string KillsDeathsSummaryText
         {
-            get => _totalKillsTooltip;
-            set => Set(ref _totalKillsTooltip, value);
-        }
-
-        public string TotalDeathsTooltip
-        {
-            get => _totalDeathsTooltip;
-            set => Set(ref _totalDeathsTooltip, value);
-        }
-
-        public int TotalKills
-        {
-            get => _totalKills;
-            set
-            {
-                _totalKills       = value;
-                TotalKillsTooltip = $"{value} total kills (all characters)";
-            }
-        }
-
-        public int TotalDeaths
-        {
-            get => _totalDeaths;
-            set
-            {
-                _totalDeaths       = value;
-                TotalDeathsTooltip = $"{value} total deaths (all characters)";
-            }
+            get => _killsDeathsSummaryText;
+            set => Set(ref _killsDeathsSummaryText, value);
         }
 
         public int KillsSinceReset
@@ -104,14 +77,14 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
             KillsSinceReset  = 0;
             DeathsSinceReset = 0;
-            TotalKills       = 0;
-            TotalDeaths      = 0;
-            KillsPerIntervalLog = string.Empty; // todo weg
+            _totalKills      = 0;
+            _totalDeaths     = 0;
+            KillsDeathsSummaryText = string.Empty;
 
-            if (apiKeyIsValid && settingsDialogViewModel.ApiKeyValueHasBeenChanged) // "&& apiKeyHasBeenChanged" is not necessary but helps understanding the code.
+            if (apiKeyIsValid && settingsDialogViewModel.ApiKeyValueHasBeenChanged) // "&& ApiKeyValueHasBeenChanged" is not necessary but helps understanding the code.
             {
-                (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
-                KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
+                (_totalKills, _totalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
+                KillsDeathsSummaryText      = _killsDeathsSummaryTextService.ResetAndReturnSummaryText(_totalKills, _totalDeaths);
 
                 _asyncTimer.Start();
             }
@@ -119,9 +92,10 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
 
         private void ResetKillsAndDeaths()
         {
-            _killDeathService.ResetKillsAndDeaths();
-            KillsSinceReset  = 0;
+            KillsSinceReset = 0;
             DeathsSinceReset = 0;
+            _killDeathService.ResetKillsAndDeaths();
+            KillsDeathsSummaryText = _killsDeathsSummaryTextService.ResetAndReturnSummaryText(_totalKills, _totalDeaths);
         }
 
         private async void OnWindowLoaded()
@@ -136,36 +110,16 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
             if (await ApiKeyValidationService.ApiKeyIsInvalid(ApiKeyService.PersistedSelectedApiKey.Value))
                 return;
 
-            (TotalKills, TotalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
-            KillsPerIntervalLog       = AddLogLineAndTruncateLogIfItGetsTooLong(string.Empty); // todo weg
+            (_totalKills, _totalDeaths) = await _killDeathService.InitialiseAndGetTotalKillsDeath(ApiKeyService.PersistedSelectedApiKey.Value);
+            KillsDeathsSummaryText      = _killsDeathsSummaryTextService.ResetAndReturnSummaryText(_totalKills, _totalDeaths);
 
             _asyncTimer.Start();
         }
 
         private async void OnAsyncTimerIntervalEnded(object sender, EventArgs e)
         {
-            (KillsSinceReset, DeathsSinceReset, TotalKills, TotalDeaths) = await _killDeathService.GetKillsAndDeaths();
-            KillsPerIntervalLog                                          = AddLogLineAndTruncateLogIfItGetsTooLong(KillsPerIntervalLog); // todo weg
-        }
-
-        public bool TitleBarButtonsAreVisible
-        {
-            get => _titleBarButtonsAreVisible;
-            set => Set(ref _titleBarButtonsAreVisible, value);
-        }
-
-        private string AddLogLineAndTruncateLogIfItGetsTooLong(string log) // todo weg
-        {
-            var logLines = _killsPerIntervalLog.Split('\n').ToList();
-            if (logLines.Count > 12)
-            {
-                logLines.Remove(logLines.Last());
-                log = string.Join('\n', logLines);
-            }
-
-            //var nexLogLine = $"{DateTime.Now:HH:mm:ss} {TotalKills} {KillsSinceReset}\n"; // todo for tests only. has to be commented in commit
-            var nexLogLine = $"{DateTime.Now:HH:mm} {TotalKills} {KillsSinceReset}\n";
-            return nexLogLine + log;
+            (KillsSinceReset, DeathsSinceReset, _totalKills, _totalDeaths) = await _killDeathService.GetKillsAndDeaths();
+            KillsDeathsSummaryText = _killsDeathsSummaryTextService.UpdateAndReturnSummaryText(KillsSinceReset, _totalKills, _totalDeaths);
         }
 
         private void InitializeCommands()
@@ -189,14 +143,13 @@ namespace Gw2TinyWvwKillCounter.ViewAndViewModels
         private const int API_REQUEST_INTERVAL_IN_SECONDS = 5 * 60;
         private readonly AsyncTimer _asyncTimer = new AsyncTimer(API_REQUEST_INTERVAL_IN_SECONDS);
         private readonly KillDeathService _killDeathService = new KillDeathService();
+        private readonly KillsDeathsSummaryTextService _killsDeathsSummaryTextService = new KillsDeathsSummaryTextService();
         private int _killsSinceReset;
         private int _deathsSinceReset;
         private int _totalDeaths;
         private int _totalKills;
         private bool _resetButtonIsEnabled = true;
-        private string _killsPerIntervalLog = string.Empty;
-        private string _totalKillsTooltip;
-        private string _totalDeathsTooltip;
+        private string _killsDeathsSummaryText = string.Empty;
         private bool _titleBarButtonsAreVisible;
     }
 }

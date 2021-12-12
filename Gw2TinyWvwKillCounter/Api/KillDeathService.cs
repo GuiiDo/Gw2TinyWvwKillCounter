@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Gw2Sharp;
-using Gw2Sharp.WebApi.Exceptions;
-using Gw2Sharp.WebApi.Http;
 
 namespace Gw2TinyWvwKillCounter.Api
 {

@@ -73,7 +73,7 @@
                 </StackPanel.Background>
                 <Button Command="{Binding ResetKillsAndDeathsCommand}"
                         IsEnabled="{Binding ResetButtonIsEnabled}"
-                        ToolTip="Reset kills and deaths to 0"
+                        ToolTip="Reset session: 0 kills, 0 deaths"
                         Background="Transparent"
                         BorderThickness="0">
                     <Viewbox Width="17" Height="17">
@@ -83,7 +83,7 @@
                     </Viewbox>
                 </Button>
                 <Button Command="{Binding OpenSettingsCommand}"
-                        ToolTip="Open settings to enter api key"
+                        ToolTip="Open settings to enter API key"
                         Background="Transparent"
                         BorderThickness="0">
                     <Viewbox Width="17" Height="17">
@@ -109,26 +109,25 @@
                 </Button>
             </StackPanel>
             <!--Kills-->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        ToolTip="{Binding KillsDeathsSummaryText}">
                 <StackPanel.Background>
                     <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="K"
-                           ToolTip="{Binding TotalKillsTooltip}"
                            Margin="2 0 0 0"
                            Width="12"
                            Foreground="DarkGray" />
                 <TextBlock Text="{Binding KillsSinceReset}"
-                           ToolTip="{Binding KillsPerIntervalLog}"
                            Foreground="LightGreen" />
             </StackPanel>
             <!--Deaths-->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        ToolTip="{Binding KillsDeathsSummaryText}">
                 <StackPanel.Background>
                     <SolidColorBrush Color="Black" Opacity="{Binding UiSettings.Opacity, Mode=OneWay}"/>
                 </StackPanel.Background>
                 <TextBlock Text="D"
-                           ToolTip="{Binding TotalDeathsTooltip}"
                            Margin="2 0 0 0"
                            Width="12"
                            Foreground="DarkGray" />
