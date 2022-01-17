@@ -4,7 +4,7 @@
 
 <h2 style="color:DarkGreen;font-weight:bolder">QUICKSTART</h2>
 
-- Download the Gw2TinyWvwKillCounter.exe: [cick here to download](https://github.com/Taschenbuch/Gw2TinyWvwKillCounter/releases)
+- Download the Gw2TinyWvwKillCounter.exe: [Click here to download](https://github.com/Taschenbuch/Gw2TinyWvwKillCounter/releases)
 - Double click on Gw2TinyWvwKillCounter.exe to start it. 
   - No installation required. 
   - The tool should appear on the top left corner of your screen.
@@ -24,7 +24,7 @@
 - No installation needed: everything in a single exe file, no coping of .dlls and stuff.
 - Not ToS breaking: it just displays information from the official Guild Wars 2 API and is not messing with Guild Wars 2 itself.
 - Supports multiple accounts by adding multiple API keys
-- Background opacity and UI scaling can be adjusted  [click for screenshot](https://user-images.githubusercontent.com/43114787/128633412-193582c7-4912-4261-b950-9123521cc175.jpg)
+- Background opacity and UI scaling can be adjusted  [Cllick for screenshot](https://user-images.githubusercontent.com/43114787/128633412-193582c7-4912-4261-b950-9123521cc175.jpg)
 
 <h2 style="color:DarkGreen;font-weight:bolder">FAQ</h2>
 
@@ -32,12 +32,12 @@
 - Look in the top left corner of your monitor. The tool is very small and easy to miss depending on the background. Especially when your monitor has a high resolution.
 - The tool is only visible when Guild Wars 2 runs in "Window" or "Windowed Fullscreen" mode. You can turn that on ingame in the Guild Wars 2 graphics settings. Because otherwise Guild Wars 2 will push itself in the foreground.
 
-<h3 style="color:DarkGreen;font-weight:bolder">How does the tool work?</h3>
+<h3 style="color:DarkGreen;font-weight:bolder">Q: How does the tool work?</h3>
 - It uses the official Guild Wars 2 API like other tools like https://gw2efficiency.com/ or https://wvwintel.com/. 
 - It reads the kill count from the realm avenger achievement (ultimate dominator title) and the characters deaths counts.
 
 <h3 style="color:DarkGreen;font-weight:bolder">Q: Is it safe to enter my API key?</h3>
-- Yes. The API key is read-only and was designed by Guild Wars 2 to be used by third party software like this tool.
+- Yes. The API is read-only and was designed by Guild Wars 2 to be used by third party software like this tool.
 - I do not have access to your API key anyway. The tool stores your API key only locally on your computer and does not send it to me or someone else.
 
 <h3 style="color:DarkGreen;font-weight:bolder">Q: Is this tool allowed? Does it comply with the Terms of Service (ToS)?</h3>
@@ -63,7 +63,7 @@
 - Create a new issue here: https://github.com/Taschenbuch/Gw2TinyWvwKillCounter/issues
 
 <h3 style="color:DarkGreen;font-weight:bolder">Q: Can Guild Wars 2 crash because of this tool?</h3>
-- No. This tool is stand alone. It does not interact with Guild Wars 2 in anyway because it only access the Guild Wars 2 API webservers like tools like gw2efficiency.
+- No. This tool is stand alone. It does not interact with Guild Wars 2 in anyway because it only access the Guild Wars 2 API webservers like tools like https://gw2efficiency.com/.
 
 <h3 style="color:DarkGreen;font-weight:bolder">Q: Gsync does not work?</h3>
 - It seems that overlays like TACO, BLISH and this tool interfere with the way gsync works. See Details here: https://github.com/Taschenbuch/Gw2TinyWvwKillCounter/issues/1
